@@ -1,0 +1,23 @@
+# Build the static binary.
+FROM golang:1.26 AS build
+WORKDIR /src
+COPY go.mod go.sum ./
+RUN go mod download
+COPY . .
+RUN CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o /out/vetkitten ./cmd/vetkitten
+
+# Fetch the judge model. MODEL_URL is any GGUF the llama.cpp server can
+# load. The default is a 0.8B instruct model under Apache 2.0 that
+# answers a disclosure question in a few seconds on one CPU core.
+FROM debian:bookworm-slim AS model
+ARG MODEL_URL=https://huggingface.co/unsloth/Qwen3.5-0.8B-GGUF/resolve/main/Qwen3.5-0.8B-Q4_K_M.gguf
+RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates curl && rm -rf /var/lib/apt/lists/*
+RUN curl -fsSL -o /model.gguf "$MODEL_URL"
+
+# Run the llama.cpp server and the scorer in one container. The server
+# image carries a shell, which the entrypoint needs to start both.
+FROM ghcr.io/ggml-org/llama.cpp:server
+COPY --from=build /out/vetkitten /vetkitten
+COPY --from=model /model.gguf /model.gguf
+COPY entrypoint-judge.sh /entrypoint-judge.sh
+ENTRYPOINT ["/entrypoint-judge.sh"]

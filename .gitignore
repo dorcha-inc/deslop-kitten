@@ -1,0 +1,28 @@
+# Build output
+bin/
+dist/
+
+# Go test and coverage artifacts
+*.test
+*.out
+coverage.html
+coverage.txt
+
+# Editor and OS
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*~
+
+# Local env
+.envrc
+.env
+.env.local
+.cache/
+
+# Claude Code local config
+.claude/
+
+# Model files are pulled at image build time and never committed.
+*.gguf

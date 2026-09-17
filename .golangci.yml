@@ -1,0 +1,52 @@
+version: "2"
+
+run:
+  timeout: 5m
+  tests: true
+
+linters:
+  default: none
+  enable:
+    - bodyclose
+    - copyloopvar
+    - depguard
+    - errcheck
+    - errorlint
+    - gosec
+    - govet
+    - ineffassign
+    - misspell
+    - modernize
+    - staticcheck
+    - unused
+
+  settings:
+    gosec:
+      excludes:
+        - G115  # int conversions are validated at boundaries
+        - G304  # the policy path is an operator-supplied flag and the summary path comes from the runner
+        - G703  # same paths as G304, flagged by taint analysis on the flag and env values
+
+    depguard:
+      rules:
+        # Signals read the forge data model and the policy. They never
+        # reach the network themselves, so a signal stays a pure function
+        # of its Input and the GitHub client stays in one package.
+        signals-stay-pure:
+          files:
+            - "**/internal/signals/**"
+            - "**/internal/report/**"
+            - "**/internal/rules/**"
+          deny:
+            - pkg: net/http
+              desc: signals, rules, and report never perform network requests
+            - pkg: github.com/google/go-github
+              desc: only internal/forge talks to GitHub
+
+  exclusions:
+    rules:
+      - path: _test\.go
+        linters:
+          - bodyclose
+          - errcheck
+          - gosec

@@ -1,0 +1,7 @@
+# The Ghostty AI Usage Policy. All AI usage in any form must be
+# disclosed, naming the tool and the extent of the assistance. Ghostty
+# also vouches first-time contributors through a discussion before
+# their pull requests are accepted, which the project automates itself.
+preset: default
+source: https://github.com/ghostty-org/ghostty/blob/main/AI_POLICY.md
+require_ai_disclosure: true

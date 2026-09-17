@@ -1,0 +1,42 @@
+name: vetkitten
+description: Checks an incoming pull request against the repository's contribution policy and posts one comment with what to fix, what reviewers should know, and where the change came from.
+author: jadidbourbaki
+
+inputs:
+  policy:
+    description: Path to the policy file inside the repository.
+    required: false
+    default: .github/vetkitten.yaml
+  comment:
+    description: Post the report as a single comment on the pull request, updated in place on reruns. Needs pull-requests write permission.
+    required: false
+    default: "true"
+  judge-url:
+    description: OpenAI-compatible base URL of a disclosure judge. Empty skips the disclosure check.
+    required: false
+    default: ""
+  judge-model:
+    description: Model name to request from the disclosure judge.
+    required: false
+    default: local
+  github-token:
+    description: Token used to read the pull request and post the comment.
+    required: false
+    default: ${{ github.token }}
+
+runs:
+  using: docker
+  image: Dockerfile
+  env:
+    GITHUB_TOKEN: ${{ inputs.github-token }}
+  args:
+    - score
+    - ${{ github.repository }}#${{ github.event.pull_request.number }}
+    - --policy
+    - ${{ inputs.policy }}
+    - --comment=${{ inputs.comment }}
+    - --judge-url
+    - ${{ inputs.judge-url }}
+    - --judge-model
+    - ${{ inputs.judge-model }}
+    - --summary

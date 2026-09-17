@@ -1,0 +1,39 @@
+# Baseline policy. Every other preset inherits from this file. The
+# default declares no contribution rule of its own, so a repository with
+# no policy file gets context and review notes and no requests. Rules
+# come from a named preset or from fields set in the repository's file.
+require_linked_issue: false
+accepted_issue_labels: []
+require_ai_disclosure: false
+forbid_ai_trailers: false
+max_files_without_issue: 0
+large_change_files: 25
+burst_events: 30
+trusted_bots:
+  - dependabot[bot]
+  - renovate[bot]
+  - github-actions[bot]
+agent_branch_prefixes:
+  - copilot/
+  - claude/
+  - codex/
+  - jules/
+  - devin/
+  - openhands/
+  - cursor/
+  - sweep/
+ai_coauthor_patterns:
+  - '(?i)\bcopilot\b'
+  - '(?i)\bclaude\b'
+  - '(?i)\bcodex\b'
+  - '(?i)\bopenai\b'
+  - '(?i)\bgemini\b'
+  - '(?i)\bjules\b'
+  - '(?i)\bdevin\b'
+  - '(?i)\bcursor\b'
+  - '(?i)\bopenhands\b'
+model_email_patterns:
+  - 'noreply@anthropic\.com$'
+  - '(?i)^\d+\+copilot@users\.noreply\.github\.com$'
+  - '(?i)devin-ai-integration'
+  - '(?i)cursoragent'
