@@ -582,7 +582,7 @@ Validate at four boundaries:
    policy is an error before any signal runs.
 
 Past these boundaries values are trusted and not re-checked. A signal
-reads `in.Policy.MinAccountAgeDays` and never re-validates it.
+reads `in.Policy.LargeChangeFiles` and never re-validates it.
 
 ### Failure handling
 
@@ -596,8 +596,8 @@ the configuration.
 
 At evaluation time, degrade. A failing signal keeps whatever findings
 it produced, its error is joined and logged at warn level, every other
-signal runs, and the report is still written. A judge failure leaves
-the disclosure signal on the policy's patterns. The process exits zero,
+signal runs, and the report is still written. A judge failure drops the
+disclosure request for that run. The process exits zero,
 because the report is advice and a scoring failure must never block a
 pull request.
 
@@ -780,8 +780,7 @@ Decisions that hold:
   without a quote never reaches a finding.
 - **Pluggable at the command line.** `--judge-url` takes any
   OpenAI-compatible base URL and `--judge-model` names the model. An
-  empty URL disables the judge and the disclosure signal uses the
-  policy's patterns.
+  empty URL disables the judge and the disclosure signal is skipped.
 - **Permissive license only.** The bundled default is Qwen3.5-0.8B
   under Apache 2.0. `MODEL_URL` on `Dockerfile.judge` swaps it for any
   GGUF the llama.cpp server loads.
