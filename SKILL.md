@@ -76,7 +76,7 @@ judge image, which bundles the model and runs on the Actions runner:
     steps:
       - uses: docker://ghcr.io/jadidbourbaki/vetkitten:judge
         with:
-          args: score ${{ github.repository }}#${{ github.event.pull_request.number }} --comment --summary
+          args: score --comment --summary
         env:
           GITHUB_TOKEN: ${{ github.token }}
 ```

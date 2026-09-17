@@ -1,5 +1,5 @@
 name: vetkitten
-description: Checks an incoming pull request against the repository's contribution policy and posts one comment with what to fix, what reviewers should know, and where the change came from.
+description: Checks an incoming pull request against the repository's contribution policy and posts one comment with what to fix and who sent the change.
 author: jadidbourbaki
 
 inputs:
@@ -24,6 +24,8 @@ inputs:
     required: false
     default: ${{ github.token }}
 
+# The pull request itself comes from GITHUB_REPOSITORY and GITHUB_REF,
+# which the runner sets on every job.
 runs:
   using: docker
   image: Dockerfile
@@ -31,7 +33,6 @@ runs:
     GITHUB_TOKEN: ${{ inputs.github-token }}
   args:
     - score
-    - ${{ github.repository }}#${{ github.event.pull_request.number }}
     - --policy
     - ${{ inputs.policy }}
     - --comment=${{ inputs.comment }}

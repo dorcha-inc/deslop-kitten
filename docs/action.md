@@ -93,10 +93,14 @@ digest:
     steps:
       - uses: docker://ghcr.io/jadidbourbaki/vetkitten:judge
         with:
-          args: score ${{ github.repository }}#${{ github.event.pull_request.number }} --comment --summary
+          args: score --comment --summary
         env:
           GITHUB_TOKEN: ${{ github.token }}
 ```
+
+Without an argument, `score` reads the pull request from
+`GITHUB_REPOSITORY` and `GITHUB_REF`, which every pull_request workflow
+run sets.
 
 The entrypoint starts the server on localhost, and vetkitten waits for
 the model to load before its first request. Loading the model takes a

@@ -45,14 +45,15 @@ type scorer struct {
 func newScore() *cobra.Command {
 	opts := scoreOptions{}
 	cmd := &cobra.Command{
-		Use:   "score <owner/repo#number | pull request URL>",
+		Use:   "score [owner/repo#number | pull request URL]",
 		Short: "Check one pull request against the repository's policy and print the report",
-		Args:  cobra.ExactArgs(1),
+		Long:  "Check one pull request against the repository's policy and print the report. Without an argument the pull request comes from GITHUB_REPOSITORY and GITHUB_REF, which a pull_request workflow run provides.",
+		Args:  cobra.MaximumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if opts.format != "markdown" && opts.format != "json" {
 				return fmt.Errorf("format must be markdown or json, got %q", opts.format)
 			}
-			ref, err := forge.ParseRef(args[0])
+			ref, err := resolveRef(args)
 			if err != nil {
 				return err
 			}
@@ -116,6 +117,13 @@ func (s scorer) run(ctx context.Context, out io.Writer, ref forge.Ref, opts scor
 	}
 	_, err = fmt.Fprint(out, rep.Markdown(policy))
 	return err
+}
+
+func resolveRef(args []string) (forge.Ref, error) {
+	if len(args) == 1 {
+		return forge.ParseRef(args[0])
+	}
+	return forge.RefFromActions(os.Getenv("GITHUB_REPOSITORY"), os.Getenv("GITHUB_REF"))
 }
 
 // newJudge builds the disclosure judge from the flags and waits for it

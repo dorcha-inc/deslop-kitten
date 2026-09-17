@@ -75,6 +75,15 @@ func TestParseRef_AcceptsShortFormAndURL(t *testing.T) {
 	}
 }
 
+func TestRefFromActions_ReadsThePullRequestNumberFromTheMergeRef(t *testing.T) {
+	got, err := RefFromActions("octo/repo", "refs/pull/42/merge")
+	require.NoError(t, err)
+	assert.Equal(t, Ref{Owner: "octo", Repo: "repo", Number: 42}, got)
+
+	_, err = RefFromActions("octo/repo", "refs/heads/main")
+	assert.Error(t, err)
+}
+
 func TestFakeForge_ReturnsIndependentCopy(t *testing.T) {
 	f := &FakeForge{}
 	f.Add(&PullRequest{
