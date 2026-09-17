@@ -100,10 +100,13 @@ func (p *PullRequest) Deletions() int {
 	return n
 }
 
-// Forge reads pull requests from a code host and maintains one comment
-// per pull request.
+// Forge reads pull requests and policy files from a code host and
+// maintains one comment per pull request.
 type Forge interface {
 	PullRequest(ctx context.Context, owner, repo string, number int) (*PullRequest, error)
+	// PolicyFile returns the file at path on ref, or ok false when the
+	// file does not exist. An empty ref means the default branch.
+	PolicyFile(ctx context.Context, owner, repo, ref, path string) (data []byte, ok bool, err error)
 	// UpsertComment edits the comment on the pull request whose body
 	// contains marker, or creates one when none exists and create is
 	// true.

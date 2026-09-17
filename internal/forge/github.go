@@ -79,6 +79,27 @@ func (g *GitHub) PullRequest(ctx context.Context, owner, repo string, number int
 	return out, nil
 }
 
+// PolicyFile reads the policy from the repository through the API, so
+// the action needs no checkout and a pull request cannot change the
+// policy that applies to it.
+func (g *GitHub) PolicyFile(ctx context.Context, owner, repo, ref, path string) ([]byte, bool, error) {
+	file, _, resp, err := g.client.Repositories.GetContents(ctx, owner, repo, path, &github.RepositoryContentGetOptions{Ref: ref})
+	if err != nil {
+		if isNotFound(resp) {
+			return nil, false, nil
+		}
+		return nil, false, fmt.Errorf("get %s: %w", path, err)
+	}
+	if file == nil {
+		return nil, false, fmt.Errorf("%s is a directory", path)
+	}
+	content, err := file.GetContent()
+	if err != nil {
+		return nil, false, fmt.Errorf("decode %s: %w", path, err)
+	}
+	return []byte(content), true, nil
+}
+
 // UpsertComment keeps one comment per pull request so reruns update it
 // in place instead of adding a new one each time.
 func (g *GitHub) UpsertComment(ctx context.Context, owner, repo string, number int, marker, body string, create bool) error {

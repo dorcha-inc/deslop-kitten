@@ -2,6 +2,7 @@ package forge
 
 import (
 	"context"
+	"encoding/base64"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
@@ -173,6 +174,21 @@ func TestGitHub_MissingPullRequestIsNotFound(t *testing.T) {
 	assert.ErrorIs(t, err, ErrNotFound)
 }
 
+func TestGitHub_PolicyFileDecodesContentAndReportsAbsence(t *testing.T) {
+	srv := fakeGitHubServer(t)
+	g, err := NewGitHubEnterprise(nil, "", srv.URL)
+	require.NoError(t, err)
+
+	data, ok, err := g.PolicyFile(context.Background(), "o", "r", "main", ".github/vetkitten.yaml")
+	require.NoError(t, err)
+	assert.True(t, ok)
+	assert.Equal(t, "preset: kubernetes\n", string(data))
+
+	_, ok, err = g.PolicyFile(context.Background(), "o", "r", "main", ".github/absent.yaml")
+	require.NoError(t, err)
+	assert.False(t, ok)
+}
+
 func TestGitHub_UpsertEditsExistingCommentAndCreatesOtherwise(t *testing.T) {
 	srv := fakeGitHubServer(t)
 	g, err := NewGitHubEnterprise(nil, "", srv.URL)
@@ -267,6 +283,9 @@ func fakeGitHubServer(t *testing.T) *httptest.Server {
 	}
 	mux.HandleFunc("GET /api/v3/repos/o/r/issues/12", func(w http.ResponseWriter, _ *http.Request) {
 		write(w, map[string]any{"number": 12, "state": "open", "labels": []map[string]any{{"name": "accepted"}}})
+	})
+	mux.HandleFunc("GET /api/v3/repos/o/r/contents/.github/vetkitten.yaml", func(w http.ResponseWriter, _ *http.Request) {
+		write(w, map[string]any{"type": "file", "encoding": "base64", "content": base64.StdEncoding.EncodeToString([]byte("preset: kubernetes\n"))})
 	})
 	mux.HandleFunc("GET /api/v3/repos/o/r/issues/7/comments", func(w http.ResponseWriter, _ *http.Request) {
 		write(w, []any{})

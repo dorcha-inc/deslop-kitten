@@ -13,7 +13,19 @@ type FakeForge struct {
 	mu       sync.RWMutex
 	prs      map[string]*PullRequest
 	Comments map[string][]string
+	Policies map[string][]byte
 	Err      error
+}
+
+// PolicyFile returns the policy stored under path, ignoring ref.
+func (f *FakeForge) PolicyFile(_ context.Context, _, _, _, path string) ([]byte, bool, error) {
+	if f.Err != nil {
+		return nil, false, f.Err
+	}
+	f.mu.RLock()
+	defer f.mu.RUnlock()
+	data, ok := f.Policies[path]
+	return data, ok, nil
 }
 
 // Add stores a pull request under its owner, repo, and number.

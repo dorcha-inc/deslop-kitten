@@ -45,7 +45,7 @@ jobs:
 
 ## The comment
 
-> ### <img src="share/cat.gif" width="24" alt=""> [vetkitten](https://github.com/jadidbourbaki/vetkitten)
+> ### <img src="share/cat-icon.gif" height="24" alt=""> [vetkitten](https://github.com/jadidbourbaki/vetkitten)
 >
 > 1. **Disclose AI assistance.** Commits carry `Co-authored-by: Copilot` and the description does not say how AI assisted the change. This repository asks for a sentence in the description naming the tool and how it was used.
 > 2. **Consider splitting.** 60 files changed, +3000 and -240 lines. This repository treats changes above 25 files as large.

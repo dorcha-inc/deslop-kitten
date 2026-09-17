@@ -15,16 +15,32 @@ import (
 	"github.com/jadidbourbaki/vetkitten/internal/rules"
 )
 
-func TestLoadPolicy_MissingFileFallsBackOnlyAtTheDefaultPath(t *testing.T) {
+func TestLoadPolicyFile_MissingFileFallsBackOnlyAtTheDefaultPath(t *testing.T) {
 	absent := filepath.Join(t.TempDir(), "absent.yaml")
 
-	p, path, err := loadPolicy(absent, false)
+	p, path, err := loadPolicyFile(absent, false)
 	require.NoError(t, err)
 	assert.Equal(t, rules.DefaultPreset, p.Preset)
 	assert.Equal(t, "", path)
 
-	_, _, err = loadPolicy(absent, true)
+	_, _, err = loadPolicyFile(absent, true)
 	assert.Error(t, err)
+}
+
+func TestLoadPolicyFromForge_UsesTheRepositoryFileOrTheDefault(t *testing.T) {
+	f := &forge.FakeForge{Policies: map[string][]byte{".github/vetkitten.yaml": []byte("preset: ghostty\n")}}
+	s := scorer{forge: f}
+	ref := forge.Ref{Owner: "o", Repo: "r", Number: 1}
+
+	p, path, err := s.loadPolicyFromForge(context.Background(), ref, "main", ".github/vetkitten.yaml")
+	require.NoError(t, err)
+	assert.Equal(t, "ghostty", p.Preset)
+	assert.Equal(t, ".github/vetkitten.yaml", path)
+
+	p, path, err = s.loadPolicyFromForge(context.Background(), ref, "main", ".github/other.yaml")
+	require.NoError(t, err)
+	assert.Equal(t, rules.DefaultPreset, p.Preset)
+	assert.Equal(t, "", path)
 }
 
 func TestRun_CommentsOnNewcomersAndStaysSilentOnCleanReturningAuthors(t *testing.T) {

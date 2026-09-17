@@ -22,11 +22,11 @@ import (
 const defaultPolicyPath = ".github/vetkitten.yaml"
 
 type scoreOptions struct {
-	policyPath string
-	format     string
-	summary    bool
-	comment    bool
-	timeout    time.Duration
+	policyPath   string
+	format       string
+	summary      bool
+	comment      bool
+	timeout      time.Duration
 	judgeURL     string
 	judgeModel   string
 	judgeWait    time.Duration
@@ -47,25 +47,38 @@ func newScore() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "score [owner/repo#number | pull request URL]",
 		Short: "Check one pull request against the repository's policy and print the report",
-		Long:  "Check one pull request against the repository's policy and print the report. Without an argument the pull request comes from GITHUB_REPOSITORY and GITHUB_REF, which a pull_request workflow run provides.",
-		Args:  cobra.MaximumNArgs(1),
+		Long: "Check one pull request against the repository's policy and print the report.\n\n" +
+			"With an argument, the policy is read from the local file named by --policy. Without an argument the pull request " +
+			"comes from GITHUB_REPOSITORY and GITHUB_REF, which a pull_request workflow run provides, and the policy is read " +
+			"from the repository's base branch through the API, so no checkout is needed and a pull request cannot change the " +
+			"policy that applies to it.",
+		Args: cobra.MaximumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if opts.format != "markdown" && opts.format != "json" {
 				return fmt.Errorf("format must be markdown or json, got %q", opts.format)
 			}
-			ref, err := resolveRef(args)
-			if err != nil {
-				return err
-			}
+			ctx, cancel := context.WithTimeout(cmd.Context(), opts.timeout)
+			defer cancel()
 			s := scorer{forge: forge.NewGitHub(nil, os.Getenv("GITHUB_TOKEN"))}
-			if s.policy, s.policyPath, err = loadPolicy(opts.policyPath, cmd.Flags().Changed("policy")); err != nil {
+			var ref forge.Ref
+			var err error
+			if len(args) == 1 {
+				if ref, err = forge.ParseRef(args[0]); err != nil {
+					return err
+				}
+				s.policy, s.policyPath, err = loadPolicyFile(opts.policyPath, cmd.Flags().Changed("policy"))
+			} else {
+				if ref, err = forge.RefFromActions(os.Getenv("GITHUB_REPOSITORY"), os.Getenv("GITHUB_REF")); err != nil {
+					return err
+				}
+				s.policy, s.policyPath, err = s.loadPolicyFromForge(ctx, ref, os.Getenv("GITHUB_BASE_REF"), opts.policyPath)
+			}
+			if err != nil {
 				return err
 			}
 			if s.judge, err = newJudge(cmd.Context(), opts); err != nil {
 				return err
 			}
-			ctx, cancel := context.WithTimeout(cmd.Context(), opts.timeout)
-			defer cancel()
 			return s.run(ctx, cmd.OutOrStdout(), ref, opts)
 		},
 	}
@@ -73,7 +86,7 @@ func newScore() *cobra.Command {
 	cmd.Flags().StringVar(&opts.format, "format", "markdown", "output format, markdown or json")
 	cmd.Flags().BoolVar(&opts.summary, "summary", false, "also append the report to the file named by GITHUB_STEP_SUMMARY")
 	cmd.Flags().BoolVar(&opts.comment, "comment", false, "post the report as vetkitten's single comment on the pull request")
-	cmd.Flags().DurationVar(&opts.timeout, "timeout", 60*time.Second, "overall deadline for forge and judge requests")
+	cmd.Flags().DurationVar(&opts.timeout, "timeout", 60*time.Second, "overall deadline for forge requests")
 	cmd.Flags().StringVar(&opts.judgeURL, "judge-url", "", "OpenAI-compatible base URL of the disclosure judge, empty skips the disclosure check")
 	cmd.Flags().StringVar(&opts.judgeModel, "judge-model", "local", "model name to request from the disclosure judge")
 	cmd.Flags().DurationVar(&opts.judgeWait, "judge-wait", 120*time.Second, "how long to wait for the disclosure judge to load its model")
@@ -119,11 +132,41 @@ func (s scorer) run(ctx context.Context, out io.Writer, ref forge.Ref, opts scor
 	return err
 }
 
-func resolveRef(args []string) (forge.Ref, error) {
-	if len(args) == 1 {
-		return forge.ParseRef(args[0])
+// loadPolicyFromForge reads the policy from the repository at baseRef.
+// A missing file resolves to the default preset with an empty path.
+func (s scorer) loadPolicyFromForge(ctx context.Context, ref forge.Ref, baseRef, path string) (*rules.Policy, string, error) {
+	data, ok, err := s.forge.PolicyFile(ctx, ref.Owner, ref.Repo, baseRef, path)
+	if err != nil {
+		return nil, "", fmt.Errorf("read policy %s from the repository: %w", path, err)
 	}
-	return forge.RefFromActions(os.Getenv("GITHUB_REPOSITORY"), os.Getenv("GITHUB_REF"))
+	if !ok {
+		p, err := rules.Preset(rules.DefaultPreset)
+		return p, "", err
+	}
+	p, err := rules.Load(bytes.NewReader(data))
+	if err != nil {
+		return nil, "", fmt.Errorf("load policy %s: %w", path, err)
+	}
+	return p, path, nil
+}
+
+// loadPolicyFile reads a local policy file. A missing file at the
+// default path resolves to the default preset with an empty path. A
+// missing file at a path the user named is an error.
+func loadPolicyFile(path string, explicit bool) (*rules.Policy, string, error) {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		if errors.Is(err, os.ErrNotExist) && !explicit {
+			p, err := rules.Preset(rules.DefaultPreset)
+			return p, "", err
+		}
+		return nil, "", fmt.Errorf("read policy %s: %w", path, err)
+	}
+	p, err := rules.Load(bytes.NewReader(data))
+	if err != nil {
+		return nil, "", fmt.Errorf("load policy %s: %w", path, err)
+	}
+	return p, path, nil
 }
 
 // newJudge builds the disclosure judge from the flags and waits for it
@@ -143,26 +186,6 @@ func newJudge(ctx context.Context, opts scoreOptions) (disclosure.Judge, error) 
 		return nil, err
 	}
 	return j, nil
-}
-
-// loadPolicy reads the policy file and returns the policy with the path
-// it came from. A missing file at the default path resolves to the
-// default preset with an empty path. A missing file at a path the user
-// named is an error.
-func loadPolicy(path string, explicit bool) (*rules.Policy, string, error) {
-	data, err := os.ReadFile(path)
-	if err != nil {
-		if errors.Is(err, os.ErrNotExist) && !explicit {
-			p, err := rules.Preset(rules.DefaultPreset)
-			return p, "", err
-		}
-		return nil, "", fmt.Errorf("read policy %s: %w", path, err)
-	}
-	p, err := rules.Load(bytes.NewReader(data))
-	if err != nil {
-		return nil, "", fmt.Errorf("load policy %s: %w", path, err)
-	}
-	return p, path, nil
 }
 
 func appendSummary(markdown string) (err error) {

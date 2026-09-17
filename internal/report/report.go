@@ -17,7 +17,7 @@ const CommentMarker = "<!-- vetkitten -->"
 
 // heading names the tool and links its repository, since the comment is
 // posted by the workflow's bot account and would otherwise be anonymous.
-const heading = "### <img src=\"https://raw.githubusercontent.com/jadidbourbaki/vetkitten/main/share/cat.gif\" width=\"24\" alt=\"\"> [vetkitten](https://github.com/jadidbourbaki/vetkitten)\n\n"
+const heading = "### <img src=\"https://raw.githubusercontent.com/jadidbourbaki/vetkitten/main/share/cat-icon.gif\" height=\"24\" alt=\"\"> [vetkitten](https://github.com/jadidbourbaki/vetkitten)\n\n"
 
 // Report is the result for one pull request.
 type Report struct {

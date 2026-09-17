@@ -28,6 +28,10 @@ jobs:
 `comment: "false"` the action needs only read permissions and the report
 goes to the job summary alone.
 
+The workflow needs no checkout step. The action reads the policy file
+from the pull request's base branch through the API, so a pull request
+cannot change the policy that applies to it.
+
 ## Inputs
 
 | Input | Default | Meaning |

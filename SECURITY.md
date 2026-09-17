@@ -25,6 +25,10 @@ vetkitten reads untrusted text. Every pull request title, body, commit
 message, and diff is content an outside party wrote, and vetkitten
 treats all of it as data.
 
+- **The policy comes from the base branch.** The action reads
+  `.github/vetkitten.yaml` through the API at the pull request's base
+  ref, never from the pull request's own tree, so a contributor cannot
+  loosen the rules that apply to their change.
 - **One write, to its own comment.** The action needs `pull-requests:
   write` to post and edit the comment and read access to everything
   else. It never labels, closes, approves, requests changes, or blocks a
