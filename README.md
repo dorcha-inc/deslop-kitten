@@ -17,6 +17,26 @@ model is answered by a 0.8B open model on the runner's CPU, so there is
 no proprietary LLM, no API key, and nothing to pay. It never blocks a
 merge.
 
+## Why
+
+Writing a pull request now takes minutes and reviewing one still takes
+an afternoon. Agents opened an estimated seventeen million pull requests
+a month in 2026. curl closed its bug bounty after a month of fabricated
+security reports. GitHub began letting maintainers cap pull requests
+from outside their projects. The people carrying that load are
+volunteers, and most of them answered by writing a contribution policy
+and then enforcing it by hand, one comment at a time, on every pull
+request that had not read it.
+
+vetkitten writes that comment. It reads the policy the project already
+wrote, tells the contributor what the project asks before a person
+spends an afternoon on the review, and tells the maintainer who is on
+the other side. A newcomer learns the rules from a list rather than
+from a closed pull request. A maintainer opens the thread already
+knowing whether the disclosure is there and whether the account has a
+history. The afternoons that come back go to the reviews that deserve
+them.
+
 ## Install
 
 Paste this into your coding agent in your repository:
@@ -99,10 +119,4 @@ GITHUB_TOKEN=... vetkitten score octo/repo#42
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md). The cat is from Zanin's
-[1-Bit Platformer Pack](https://opengameart.org/content/1-bit-platformer-pack-0),
-CC0.
-
-## License
-
-[MIT](LICENSE)
+See [CONTRIBUTING.md](CONTRIBUTING.md).
