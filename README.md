@@ -22,37 +22,23 @@ blocks a merge.
   <img src="share/meme.png" alt="deslop-kitten shielding open source maintainers from AI slop PR spam" width="440">
 </p>
 
-Are you an open source maintainer? Are you tired of AI slop pull
-requests spamming your repository? Most of them ignore the contribution
-policy you wrote: no AI disclosure, no linked issue, no description.
-You review them anyway, because a real fix hides among them, and you do
-it as a volunteer. In January 2026 curl closed its bug bounty because
-fabricated AI reports had buried the real ones.
+Are you an open source maintainer tired of AI slop pull requests? Most
+of them ignore the contribution policy you wrote, and you review them
+anyway, as a volunteer.
 
-The spam has a second cost. Maintainers have become much less likely to
-engage with anyone who sends a pull request, and I understand why.
-Until early 2025 I regularly sent fixes and changes to projects I liked.
-The communities welcomed them, and I got to know other passionate
-people through them. Today agents spam every popular repository with
-questionable changes, and sending a pull request is not worth the
-effort unless you know the maintainer personally. Open source needs a
-solution before it becomes a place nobody wants to send a fix to.
+The spam has a second cost. Until early 2025 I regularly sent fixes to
+projects I liked and got to know their maintainers. Today agents flood
+every popular repository with questionable changes, so maintainers
+engage with nobody they do not already know, and sending a fix is
+rarely worth the effort. Open source needs a fix for that.
 
-deslop-kitten is my attempt at one. It reads the contribution policy
-your project already wrote, checks each pull request against it, and
-posts one comment saying what the contributor must fix before you
-review the change. It also tells you who opened the pull request and
-how: pull requests merged here and elsewhere, account age, agent branch
-prefixes, and AI co-author trailers. You open the thread knowing what
-you are looking at, and a newcomer who followed your policy gets a
-clean path in.
-
-deslop-kitten costs nothing. It is open source under MIT and runs as a
-Docker container inside your GitHub Actions job. The one question that
-needs a language model goes to a 0.8B open model running on the
-runner's CPU, so it calls no hosted LLM, needs no API key, and pays for
-no tokens or seats. On a public repository GitHub provides the Actions
-minutes free as well.
+deslop-kitten is my attempt. It checks each pull request against the
+policy your project already wrote and posts one comment: what the
+contributor must fix before you review, and who opened the pull
+request, with links. It is free and MIT licensed and runs inside your
+GitHub Actions job. The one question that needs a language model goes
+to a 0.8B open model on the runner, so it calls no hosted LLM, needs no
+API key, and nothing meters it.
 
 ## Install
 
