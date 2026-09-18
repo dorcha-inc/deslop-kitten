@@ -16,7 +16,7 @@ This project follows the [Contributor Covenant](CODE_OF_CONDUCT.md).
    ```bash
    git clone https://github.com/YOUR_USERNAME/vetkitten.git
    cd vetkitten
-   git remote add upstream https://github.com/jadidbourbaki/vetkitten.git
+   git remote add upstream https://github.com/dorcha-inc/vetkitten.git
    ```
 
 ## Development setup

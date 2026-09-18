@@ -1,7 +1,7 @@
 # Security Policy
 
 Report a vulnerability through GitHub's private vulnerability reporting
-at [Report a vulnerability](https://github.com/jadidbourbaki/vetkitten/security/advisories/new).
+at [Report a vulnerability](https://github.com/dorcha-inc/vetkitten/security/advisories/new).
 The report stays private between you and the maintainers until a fix
 ships. Please include a description, steps to reproduce when
 applicable, an impact assessment, and a suggested fix when you have

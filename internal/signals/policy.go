@@ -6,7 +6,7 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/jadidbourbaki/vetkitten/internal/disclosure"
+	"github.com/dorcha-inc/vetkitten/internal/disclosure"
 )
 
 type linkedIssueRequired struct{}

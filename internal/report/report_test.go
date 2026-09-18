@@ -8,8 +8,8 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/jadidbourbaki/vetkitten/internal/forge"
-	"github.com/jadidbourbaki/vetkitten/internal/signals"
+	"github.com/dorcha-inc/vetkitten/internal/forge"
+	"github.com/dorcha-inc/vetkitten/internal/signals"
 )
 
 var now = time.Date(2026, 9, 17, 12, 0, 0, 0, time.UTC)

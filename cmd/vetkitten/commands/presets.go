@@ -5,7 +5,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/jadidbourbaki/vetkitten/internal/rules"
+	"github.com/dorcha-inc/vetkitten/internal/rules"
 )
 
 func newPresets() *cobra.Command {

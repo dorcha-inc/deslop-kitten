@@ -12,11 +12,11 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/jadidbourbaki/vetkitten/internal/disclosure"
-	"github.com/jadidbourbaki/vetkitten/internal/forge"
-	"github.com/jadidbourbaki/vetkitten/internal/report"
-	"github.com/jadidbourbaki/vetkitten/internal/rules"
-	"github.com/jadidbourbaki/vetkitten/internal/signals"
+	"github.com/dorcha-inc/vetkitten/internal/disclosure"
+	"github.com/dorcha-inc/vetkitten/internal/forge"
+	"github.com/dorcha-inc/vetkitten/internal/report"
+	"github.com/dorcha-inc/vetkitten/internal/rules"
+	"github.com/dorcha-inc/vetkitten/internal/signals"
 )
 
 const defaultPolicyPath = ".github/vetkitten.yaml"

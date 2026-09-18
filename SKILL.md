@@ -26,7 +26,7 @@ jobs:
   check:
     runs-on: ubuntu-latest
     steps:
-      - uses: jadidbourbaki/vetkitten@main
+      - uses: dorcha-inc/vetkitten@main
 ```
 
 `pull-requests: write` lets the action post and edit its comment. Do
@@ -74,7 +74,7 @@ judge image, which bundles the model and runs on the Actions runner:
 
 ```yaml
     steps:
-      - uses: docker://ghcr.io/jadidbourbaki/vetkitten:judge
+      - uses: docker://ghcr.io/dorcha-inc/vetkitten:judge
         with:
           args: score --comment --summary
         env:
@@ -97,5 +97,5 @@ change any existing workflow.
 
 ## Reference
 
-- Every policy field and its default: https://github.com/jadidbourbaki/vetkitten/blob/main/docs/action.md
-- Every signal and when it fires: https://github.com/jadidbourbaki/vetkitten/blob/main/docs/signals.md
+- Every policy field and its default: https://github.com/dorcha-inc/vetkitten/blob/main/docs/action.md
+- Every signal and when it fires: https://github.com/dorcha-inc/vetkitten/blob/main/docs/signals.md

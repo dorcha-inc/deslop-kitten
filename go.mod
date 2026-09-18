@@ -1,4 +1,4 @@
-module github.com/jadidbourbaki/vetkitten
+module github.com/dorcha-inc/vetkitten
 
 go 1.26.1
 

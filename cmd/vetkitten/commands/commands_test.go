@@ -10,9 +10,9 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/jadidbourbaki/vetkitten/internal/forge"
-	"github.com/jadidbourbaki/vetkitten/internal/report"
-	"github.com/jadidbourbaki/vetkitten/internal/rules"
+	"github.com/dorcha-inc/vetkitten/internal/forge"
+	"github.com/dorcha-inc/vetkitten/internal/report"
+	"github.com/dorcha-inc/vetkitten/internal/rules"
 )
 
 func TestLoadPolicyFile_MissingFileFallsBackOnlyAtTheDefaultPath(t *testing.T) {

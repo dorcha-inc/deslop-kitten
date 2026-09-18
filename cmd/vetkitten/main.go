@@ -5,7 +5,7 @@ package main
 import (
 	"os"
 
-	"github.com/jadidbourbaki/vetkitten/cmd/vetkitten/commands"
+	"github.com/dorcha-inc/vetkitten/cmd/vetkitten/commands"
 )
 
 func main() {

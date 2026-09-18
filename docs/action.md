@@ -21,7 +21,7 @@ jobs:
   check:
     runs-on: ubuntu-latest
     steps:
-      - uses: jadidbourbaki/vetkitten@main
+      - uses: dorcha-inc/vetkitten@main
 ```
 
 `pull-requests: write` lets the action post and edit its comment. With
@@ -95,7 +95,7 @@ digest:
 
 ```yaml
     steps:
-      - uses: docker://ghcr.io/jadidbourbaki/vetkitten:judge
+      - uses: docker://ghcr.io/dorcha-inc/vetkitten:judge
         with:
           args: score --comment --summary
         env:
@@ -121,7 +121,7 @@ environment when the endpoint needs one.
 Both images run anywhere Docker runs:
 
 ```bash
-docker run --rm -e GITHUB_TOKEN ghcr.io/jadidbourbaki/vetkitten:judge score octo/repo#42 --format json
+docker run --rm -e GITHUB_TOKEN ghcr.io/dorcha-inc/vetkitten:judge score octo/repo#42 --format json
 ```
 
 `GITHUB_TOKEN` is read from the environment. Without `--comment` nothing

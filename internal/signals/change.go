@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/jadidbourbaki/vetkitten/internal/forge"
+	"github.com/dorcha-inc/vetkitten/internal/forge"
 )
 
 const thinDescriptionWords = 20

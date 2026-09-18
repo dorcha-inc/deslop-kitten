@@ -9,9 +9,9 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/jadidbourbaki/vetkitten/internal/disclosure"
-	"github.com/jadidbourbaki/vetkitten/internal/forge"
-	"github.com/jadidbourbaki/vetkitten/internal/rules"
+	"github.com/dorcha-inc/vetkitten/internal/disclosure"
+	"github.com/dorcha-inc/vetkitten/internal/forge"
+	"github.com/dorcha-inc/vetkitten/internal/rules"
 )
 
 var now = time.Date(2026, 9, 17, 12, 0, 0, 0, time.UTC)

@@ -9,7 +9,7 @@ direction.
 
 ## Getting in touch
 
-File a [GitHub issue](https://github.com/jadidbourbaki/vetkitten/issues).
+File a [GitHub issue](https://github.com/dorcha-inc/vetkitten/issues).
 See [SECURITY.md](SECURITY.md) for reporting a vulnerability.
 
 ## Becoming a maintainer

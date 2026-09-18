@@ -8,8 +8,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/jadidbourbaki/vetkitten/internal/forge"
-	"github.com/jadidbourbaki/vetkitten/internal/rules"
+	"github.com/dorcha-inc/vetkitten/internal/forge"
+	"github.com/dorcha-inc/vetkitten/internal/rules"
 )
 
 const burstWindow = 3 * time.Hour

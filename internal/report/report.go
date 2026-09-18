@@ -7,8 +7,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/jadidbourbaki/vetkitten/internal/forge"
-	"github.com/jadidbourbaki/vetkitten/internal/signals"
+	"github.com/dorcha-inc/vetkitten/internal/forge"
+	"github.com/dorcha-inc/vetkitten/internal/signals"
 )
 
 // CommentMarker is the hidden HTML comment that identifies vetkitten's
@@ -17,7 +17,7 @@ const CommentMarker = "<!-- vetkitten -->"
 
 // heading names the tool and links its repository, since the comment is
 // posted by the workflow's bot account and would otherwise be anonymous.
-const heading = "### <img src=\"https://raw.githubusercontent.com/jadidbourbaki/vetkitten/main/share/cat-icon.gif\" height=\"24\" alt=\"\"> [vetkitten](https://github.com/jadidbourbaki/vetkitten)\n\n"
+const heading = "### <img src=\"https://raw.githubusercontent.com/dorcha-inc/vetkitten/main/share/cat-icon.gif\" height=\"24\" alt=\"\"> [vetkitten](https://github.com/dorcha-inc/vetkitten)\n\n"
 
 // Report is the result for one pull request.
 type Report struct {
