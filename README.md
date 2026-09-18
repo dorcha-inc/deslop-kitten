@@ -2,7 +2,7 @@
   <img src="share/cat.gif" alt="deslop-kitten" width="160">
 </p>
 
-<p align="center">A GitHub Action that checks each pull request against your contribution policy and costs nothing to run.</p>
+<p align="center">A free GitHub Action that flags AI slop pull requests before you review them.</p>
 
 <p align="center">
   <a href="https://github.com/dorcha-inc/deslop-kitten/actions/workflows/ci.yml"><img src="https://github.com/dorcha-inc/deslop-kitten/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
@@ -11,11 +11,8 @@
 
 deslop-kitten reads each incoming pull request, compares it with the
 contribution policy your repository has written down, and leaves one
-comment: what to do before review, and who sent the change. Everything
-runs inside the Actions job. A 0.8B open model on the runner's CPU
-answers the one question that needs a language model, so deslop-kitten
-calls no proprietary LLM, needs no API key, and sends you no bill. It
-never blocks a merge.
+comment: what to do before review, and who sent the change. It never
+blocks a merge.
 
 ## Motivation
 
@@ -23,23 +20,37 @@ never blocks a merge.
   <img src="share/meme.png" alt="deslop-kitten shielding open source maintainers from AI slop PR spam" width="440">
 </p>
 
-Writing a pull request now takes minutes and reviewing one still takes
-an afternoon. Agents opened an estimated seventeen million pull requests
-a month in 2026. curl closed its bug bounty after a month of fabricated
-security reports. GitHub began letting maintainers cap pull requests
-from outside their projects. Most of the maintainers who review those
-pull requests are volunteers, and most of them answered by writing a
-contribution policy and then enforcing it by hand, one comment at a
-time, on every pull request whose author had not read it.
+Are you an open source maintainer? Are you tired of AI slop pull
+requests spamming your repository? Most of them ignore the contribution
+policy you wrote: no AI disclosure, no linked issue, no description.
+You review them anyway, because a real fix hides among them, and you do
+it as a volunteer. In January 2026 curl closed its bug bounty because
+fabricated AI reports had buried the real ones.
 
-deslop-kitten writes that comment. It reads the policy the project already
-wrote, tells the contributor what the project asks before a person
-spends an afternoon on the review, and tells the maintainer who opened
-the pull request. A newcomer learns the rules from the numbered list
-before anyone closes their pull request. A maintainer opens the thread
-already knowing whether the disclosure is there and whether the account
-has a history, and spends the afternoon on the pull requests that
-already meet the policy.
+The spam has a second cost. Maintainers have become much less likely to
+engage with anyone who sends a pull request, and I understand why.
+Until early 2025 I regularly sent fixes and changes to projects I liked.
+The communities welcomed them, and I got to know other passionate
+people through them. Today agents spam every popular repository with
+questionable changes, and sending a pull request is not worth the
+effort unless you know the maintainer personally. Open source needs a
+solution before it becomes a place nobody wants to send a fix to.
+
+deslop-kitten is my attempt at one. It reads the contribution policy
+your project already wrote, checks each pull request against it, and
+posts one comment saying what the contributor must fix before you
+review the change. It also tells you who opened the pull request and
+how: pull requests merged here and elsewhere, account age, agent branch
+prefixes, and AI co-author trailers. You open the thread knowing what
+you are looking at, and a newcomer who followed your policy gets a
+clean path in.
+
+deslop-kitten costs nothing. It is open source under MIT and runs as a
+Docker container inside your GitHub Actions job. The one question that
+needs a language model goes to a 0.8B open model running on the
+runner's CPU, so it calls no hosted LLM, needs no API key, and pays for
+no tokens or seats. On a public repository GitHub provides the Actions
+minutes free as well.
 
 ## Install
 
@@ -80,22 +91,11 @@ when it has something to say, edits the comment in place on every push,
 and turns it into an all-clear once the author resolves the requests. A clean
 pull request from a returning contributor gets no comment.
 
-## Costs nothing to run
-
-Every check compares counts and strings from the pull request and the
-author's public profile. One question needs a model: does the
-description disclose AI help. A 0.8B open model answers it through
-llama.cpp on the Actions runner, and the model ships inside the
-container image. deslop-kitten sends no tokens to any service and reads no
-API key, and on a public repository GitHub provides the Actions minutes
-free as well. Hosted review bots charge per seat or per pull request,
-and a project with hundreds of inbound pull requests a month pays
-accordingly. deslop-kitten costs the maintainer nothing.
-
 ## Policy
 
-Without a policy file deslop-kitten asks for nothing and reports the facts.
-To enforce a written policy, add `.github/deslop-kitten.yaml`:
+Without a policy file deslop-kitten reports the facts and asks only
+about the change itself: a large diff, a failing check, or a thin
+description. To enforce a written policy, add `.github/deslop-kitten.yaml`:
 
 ```yaml
 preset: kubernetes
