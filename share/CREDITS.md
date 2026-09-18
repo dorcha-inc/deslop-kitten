@@ -7,3 +7,6 @@ by Zanin, published on OpenGameArt under
 16 by 16 frames are cropped to the cat, scaled with nearest-neighbor
 sampling, twelve times for `cat.gif` and three times for
 `cat-icon.gif`, and played in a loop.
+
+`meme.png` captions the soldier protecting sleeping child meme
+template, made with [imgflip](https://imgflip.com).

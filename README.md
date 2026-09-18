@@ -5,7 +5,7 @@
 <p align="center">Contribution policy checks for pull requests, run by a small open model inside your GitHub Action.</p>
 
 <p align="center">
-  <a href="https://github.com/jadidbourbaki/vetkitten/actions/workflows/ci.yml"><img src="https://github.com/jadidbourbaki/vetkitten/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="https://github.com/dorcha-inc/vetkitten/actions/workflows/ci.yml"><img src="https://github.com/dorcha-inc/vetkitten/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT"></a>
 </p>
 
@@ -17,7 +17,11 @@ model is answered by a 0.8B open model on the runner's CPU, so there is
 no proprietary LLM, no API key, and nothing to pay. It never blocks a
 merge.
 
-## Why
+## Motivation
+
+<p align="center">
+  <img src="share/meme.png" alt="vetkitten shielding open source maintainers from AI slop PR spam" width="440">
+</p>
 
 Writing a pull request now takes minutes and reviewing one still takes
 an afternoon. Agents opened an estimated seventeen million pull requests
@@ -42,7 +46,7 @@ them.
 Paste this into your coding agent in your repository:
 
 ```
-Read https://raw.githubusercontent.com/jadidbourbaki/vetkitten/main/SKILL.md
+Read https://raw.githubusercontent.com/dorcha-inc/vetkitten/main/SKILL.md
 and follow it to add vetkitten to this repository.
 ```
 
@@ -60,26 +64,21 @@ jobs:
   check:
     runs-on: ubuntu-latest
     steps:
-      - uses: jadidbourbaki/vetkitten@main
+      - uses: dorcha-inc/vetkitten@main
 ```
 
 ## The comment
 
-> ### <img src="share/cat-icon.gif" height="24" alt=""> [vetkitten](https://github.com/jadidbourbaki/vetkitten)
->
-> 1. **Disclose AI assistance.** Commits carry `Co-authored-by: Copilot` and the description does not say how AI assisted the change. This repository asks for a sentence in the description naming the tool and how it was used.
-> 2. **Consider splitting.** 60 files changed, +3000 and -240 lines. This repository treats changes above 25 files as large.
->
-> First pull request here from `fresh-bot`, with 40 merged elsewhere on GitHub and an account since 2015. The head branch `copilot/optimize-agg` carries a prefix used by AI coding agents.
->
-> <sub>Policy: `.github/vetkitten.yaml`, preset `kubernetes` ([source](https://github.com/kubernetes/community/blob/master/contributors/guide/pull-requests.md#ai-guidance))</sub>
+<img src="share/comment.png" alt="vetkitten's comment on a pull request" width="700">
 
-Each request names the fact, the rule your repository wrote down, and
-the fix. The sentences after the list come from the pull request and
-the author's public profile. vetkitten posts only when it has something
-to say, edits the comment in place on every push, and turns it into an
-all-clear once the requests are resolved. A clean pull request from a
-returning contributor gets no comment.
+The comment above is from [this repository's own first pull request](https://github.com/dorcha-inc/vetkitten/pull/2).
+When a policy asks for something the pull request lacks, a numbered
+list comes first, and each item names the fact, the rule your
+repository wrote down, and the fix. The sentences after it come from
+the pull request and the author's public profile. vetkitten posts only
+when it has something to say, edits the comment in place on every push,
+and turns it into an all-clear once the requests are resolved. A clean
+pull request from a returning contributor gets no comment.
 
 ## Costs nothing to run
 
@@ -113,7 +112,7 @@ model in [docs/concepts.md](docs/concepts.md), and every check in
 ## Run it locally
 
 ```bash
-go install github.com/jadidbourbaki/vetkitten/cmd/vetkitten@latest
+go install github.com/dorcha-inc/vetkitten/cmd/vetkitten@latest
 GITHUB_TOKEN=... vetkitten score octo/repo#42
 ```
 
