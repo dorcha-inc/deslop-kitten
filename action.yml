@@ -1,5 +1,5 @@
 name: deslop-kitten
-description: Checks an incoming pull request against the repository's contribution policy and posts one comment with what to fix and who sent the change.
+description: Checks each pull request against your contribution policy and posts one comment with what to fix and who sent it.
 author: jadidbourbaki
 branding:
   icon: shield
