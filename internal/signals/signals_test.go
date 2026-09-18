@@ -86,6 +86,7 @@ func TestRun_AgentPullRequestUnderKubernetesPolicyFiresEverySignal(t *testing.T)
 	findings, err := Run(context.Background(), Defaults(&disclosure.FakeJudge{}), Input{PR: agentPR(), Policy: mustPreset(t, "kubernetes"), Now: now})
 	require.NoError(t, err)
 	assert.Equal(t, []string{
+		"ai_trailers_forbidden",
 		"large_change",
 		"ci_failing",
 		"thin_description",
@@ -94,14 +95,20 @@ func TestRun_AgentPullRequestUnderKubernetesPolicyFiresEverySignal(t *testing.T)
 		"model_commit_email",
 		"activity_burst",
 		"ai_disclosure_required",
-		"ai_disclosure_required",
 	}, ids(findings))
-	assert.Equal(t, "Disclose AI assistance.", findings[7].Title)
-	assert.Equal(t, "Remove AI trailers.", findings[8].Title)
-	assert.Contains(t, findings[8].Body, "`Assisted-by: Copilot`, `Co-authored-by: Copilot <198982749+Copilot@users.noreply.github.com>`")
+	assert.Equal(t, "Remove AI trailers.", findings[0].Title)
+	assert.Contains(t, findings[0].Body, "`Assisted-by: Copilot`, `Co-authored-by: Copilot <198982749+Copilot@users.noreply.github.com>`")
+	assert.Equal(t, "Disclose AI assistance.", findings[8].Title)
 	for _, f := range findings {
 		assert.Equal(t, f.Category != CategoryFact, f.IsRequest(), f.Signal)
 	}
+}
+
+func TestRun_ForbiddenTrailersFireWithoutAJudge(t *testing.T) {
+	findings, err := Run(context.Background(), Defaults(nil), Input{PR: agentPR(), Policy: mustPreset(t, "kubernetes"), Now: now})
+	require.NoError(t, err)
+	assert.Contains(t, ids(findings), "ai_trailers_forbidden")
+	assert.NotContains(t, ids(findings), "ai_disclosure_required")
 }
 
 func TestRun_GhosttyPolicyAsksOnlyForDisclosure(t *testing.T) {

@@ -14,7 +14,7 @@ A signal with nothing to report emits nothing. A bot on the policy's
 | linked_issue_required | `require_linked_issue` is set and the description references no issue | Reference an issue. |
 | linked_issue_not_accepted | `accepted_issue_labels` is set and no linked issue carries one of them | Get the issue triaged. |
 | ai_disclosure_required | `require_ai_disclosure` is set, the branch or commits or account show AI involvement, a judge is configured, and the judge finds no disclosure | Disclose AI assistance. |
-| ai_disclosure_required | `forbid_ai_trailers` is set and a commit carries an AI co-author, assisted-by, or co-developed-by trailer | Remove AI trailers. |
+| ai_trailers_forbidden | `forbid_ai_trailers` is set and a commit carries an AI co-author, assisted-by, or co-developed-by trailer | Remove AI trailers. |
 | files_without_issue | `max_files_without_issue` is set, no issue is linked, and the file count exceeds it | Reference an issue. |
 
 ## Requests from the change
