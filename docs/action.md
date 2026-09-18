@@ -78,7 +78,7 @@ Inside a flow list they need quotes, as in `["dependabot[bot]"]`.
 
 | Preset | Encodes | Source |
 |---|---|---|
-| default | The author table and the trusted bot list. Asks for nothing before review | none |
+| default | The change thresholds, the author sentences, and the trusted bot list. Declares no policy rule | none |
 | kubernetes | Disclosure required, AI trailers not accepted | [Kubernetes pull request guide, AI Guidance](https://github.com/kubernetes/community/blob/master/contributors/guide/pull-requests.md#ai-guidance) |
 | ghostty | Disclosure required, naming the tool and the extent | [Ghostty AI Usage Policy](https://github.com/ghostty-org/ghostty/blob/main/AI_POLICY.md) |
 

@@ -59,8 +59,8 @@ check and runs every other signal.
 ## Policy files and presets
 
 A repository declares its policy in `.github/deslop-kitten.yaml`. The file
-names a preset and overrides any field. The default preset asks for
-nothing before review and supplies the author sentences and the trusted
-bot list. The kubernetes and ghostty presets encode those projects' written
+names a preset and overrides any field. The default preset declares no
+policy rule and supplies the change thresholds, the author sentences,
+and the trusted bot list. The kubernetes and ghostty presets encode those projects' written
 AI guidance and link the documents. See [action.md](action.md) for the
 fields.

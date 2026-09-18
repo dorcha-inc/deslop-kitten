@@ -207,6 +207,6 @@ func footer(p Policy) string {
 	case p.PolicyPath != "":
 		return fmt.Sprintf("Policy: `%s`, preset `%s`", p.PolicyPath, p.Preset)
 	default:
-		return "Policy: default preset, which asks for nothing before review"
+		return "Policy: default preset"
 	}
 }
