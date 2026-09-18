@@ -1,4 +1,4 @@
-name: vetkitten
+name: deslop-kitten
 description: Checks an incoming pull request against the repository's contribution policy and posts one comment with what to fix and who sent the change.
 author: jadidbourbaki
 
@@ -6,7 +6,7 @@ inputs:
   policy:
     description: Path to the policy file inside the repository.
     required: false
-    default: .github/vetkitten.yaml
+    default: .github/deslop-kitten.yaml
   comment:
     description: Post the report as a single comment on the pull request, updated in place on reruns. Needs pull-requests write permission.
     required: false

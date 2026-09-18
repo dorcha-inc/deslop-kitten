@@ -26,7 +26,10 @@ const (
 // RecentEventTimes holds the timestamps of the author's most recent
 // public events, newest first, up to one page.
 type Account struct {
-	Login                      string
+	Login string
+	// URL is the account's profile page, empty when the forge has no
+	// user record for the login.
+	URL                        string
 	IsBot                      bool
 	CreatedAt                  time.Time
 	PublicRepos                int
@@ -75,6 +78,11 @@ type PullRequest struct {
 	Body         string
 	Author       Account
 	HeadBranch   string
+	// RepoURL is the base repository's web page and HeadURL the head
+	// branch's tree on its own repository. HeadURL is empty when the
+	// head repository is gone, as after a deleted fork.
+	RepoURL      string
+	HeadURL      string
 	CreatedAt    time.Time
 	Files        []File
 	Commits      []Commit

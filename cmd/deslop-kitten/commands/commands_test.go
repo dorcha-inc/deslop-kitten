@@ -10,9 +10,9 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/dorcha-inc/vetkitten/internal/forge"
-	"github.com/dorcha-inc/vetkitten/internal/report"
-	"github.com/dorcha-inc/vetkitten/internal/rules"
+	"github.com/dorcha-inc/deslop-kitten/internal/forge"
+	"github.com/dorcha-inc/deslop-kitten/internal/report"
+	"github.com/dorcha-inc/deslop-kitten/internal/rules"
 )
 
 func TestLoadPolicyFile_MissingFileFallsBackOnlyAtTheDefaultPath(t *testing.T) {
@@ -28,14 +28,14 @@ func TestLoadPolicyFile_MissingFileFallsBackOnlyAtTheDefaultPath(t *testing.T) {
 }
 
 func TestLoadPolicyFromForge_UsesTheRepositoryFileOrTheDefault(t *testing.T) {
-	f := &forge.FakeForge{Policies: map[string][]byte{".github/vetkitten.yaml": []byte("preset: ghostty\n")}}
+	f := &forge.FakeForge{Policies: map[string][]byte{".github/deslop-kitten.yaml": []byte("preset: ghostty\n")}}
 	s := scorer{forge: f}
 	ref := forge.Ref{Owner: "o", Repo: "r", Number: 1}
 
-	p, path, err := s.loadPolicyFromForge(context.Background(), ref, "main", ".github/vetkitten.yaml")
+	p, path, err := s.loadPolicyFromForge(context.Background(), ref, "main", ".github/deslop-kitten.yaml")
 	require.NoError(t, err)
 	assert.Equal(t, "ghostty", p.Preset)
-	assert.Equal(t, ".github/vetkitten.yaml", path)
+	assert.Equal(t, ".github/deslop-kitten.yaml", path)
 
 	p, path, err = s.loadPolicyFromForge(context.Background(), ref, "main", ".github/other.yaml")
 	require.NoError(t, err)

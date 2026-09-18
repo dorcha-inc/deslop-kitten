@@ -6,7 +6,7 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/dorcha-inc/vetkitten/internal/disclosure"
+	"github.com/dorcha-inc/deslop-kitten/internal/disclosure"
 )
 
 type linkedIssueRequired struct{}
@@ -81,7 +81,7 @@ func (s aiDisclosureRequired) Evaluate(ctx context.Context, in Input) ([]Finding
 			Category: CategoryPolicy,
 			Severity: SeverityMedium,
 			Title:    "Disclose AI assistance.",
-			Body:     evidence + " and the description does not say how AI assisted the change. This repository asks for a sentence in the description naming the tool and how it was used.",
+			Body:     evidence + " and the description does not say how AI assisted the change. This repository asks for a sentence in the description naming the tool and what it did.",
 		})
 	}
 	if in.Policy.ForbidAITrailers && len(trailers) > 0 {

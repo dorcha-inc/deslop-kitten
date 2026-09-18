@@ -3,27 +3,29 @@ package report
 import (
 	"encoding/json"
 	"fmt"
+	"net/url"
 	"slices"
 	"strings"
 	"time"
 
-	"github.com/dorcha-inc/vetkitten/internal/forge"
-	"github.com/dorcha-inc/vetkitten/internal/signals"
+	"github.com/dorcha-inc/deslop-kitten/internal/forge"
+	"github.com/dorcha-inc/deslop-kitten/internal/signals"
 )
 
-// CommentMarker is the hidden HTML comment that identifies vetkitten's
+// CommentMarker is the hidden HTML comment that identifies deslop-kitten's
 // comment on a pull request so reruns update it in place.
-const CommentMarker = "<!-- vetkitten -->"
+const CommentMarker = "<!-- deslop-kitten -->"
 
 // heading names the tool and links its repository, since the comment is
 // posted by the workflow's bot account and would otherwise be anonymous.
-const heading = "### <img src=\"https://raw.githubusercontent.com/dorcha-inc/vetkitten/main/share/cat-icon.gif\" height=\"24\" alt=\"\"> [vetkitten](https://github.com/dorcha-inc/vetkitten)\n\n"
+const heading = "### <img src=\"https://raw.githubusercontent.com/dorcha-inc/deslop-kitten/main/share/cat-icon.gif\" height=\"24\" alt=\"\"> [deslop-kitten](https://github.com/dorcha-inc/deslop-kitten)\n\n"
 
 // Report is the result for one pull request.
 type Report struct {
 	Owner       string            `json:"owner"`
 	Repo        string            `json:"repo"`
 	Number      int               `json:"number"`
+	RepoURL     string            `json:"repo_url,omitempty"`
 	Title       string            `json:"title"`
 	Author      forge.Account     `json:"author"`
 	Findings    []signals.Finding `json:"findings"`
@@ -52,7 +54,7 @@ func (r Report) Comment(p Policy) string {
 }
 
 // AllClear is the comment body that replaces an earlier comment once
-// its requests have been resolved.
+// the author has resolved its requests.
 func AllClear() string {
 	return CommentMarker + "\n" + heading + "Every check passes on the latest commits.\n"
 }
@@ -118,23 +120,26 @@ func (r Report) requests() []signals.Finding {
 func (r Report) authorSentence() string {
 	a := r.Author
 	login := "`" + a.Login + "`"
+	if a.URL != "" {
+		login = link(a.Login, a.URL)
+	}
 	if slices.ContainsFunc(r.Findings, func(f signals.Finding) bool { return f.Signal == "declared_bot" }) {
 		return login + " is a bot account outside this repository's trusted list."
 	}
 	if a.MergedPullRequestsInRepo > 0 {
-		s := fmt.Sprintf("%s has %s merged here", login, count(a.MergedPullRequestsInRepo, "pull request", "pull requests"))
+		s := login + " has " + link(count(a.MergedPullRequestsInRepo, "pull request", "pull requests")+" merged here", r.mergedHereURL())
 		if elsewhere := a.MergedPullRequestsAnywhere - a.MergedPullRequestsInRepo; elsewhere > 0 {
-			s += fmt.Sprintf(" and %d elsewhere on GitHub", elsewhere)
+			s += " and " + link(fmt.Sprintf("%d elsewhere on GitHub", elsewhere), r.mergedElsewhereURL())
 		}
 		return s + "."
 	}
 	lead := "First pull request here from " + login
 	if a.PullRequestsInRepo > 1 {
-		lead = fmt.Sprintf("%s has opened %d pull requests here, none merged yet", login, a.PullRequestsInRepo)
+		lead = fmt.Sprintf("%s has opened %s here, none merged yet", login, link(fmt.Sprintf("%d pull requests", a.PullRequestsInRepo), r.openedHereURL()))
 	}
 	var details []string
 	if a.MergedPullRequestsAnywhere > 0 {
-		details = append(details, fmt.Sprintf("%d merged elsewhere on GitHub", a.MergedPullRequestsAnywhere))
+		details = append(details, link(fmt.Sprintf("%d merged elsewhere on GitHub", a.MergedPullRequestsAnywhere), r.mergedElsewhereURL()))
 	} else {
 		details = append(details, "no merged pull requests on GitHub yet")
 	}
@@ -145,6 +150,42 @@ func (r Report) authorSentence() string {
 		}
 	}
 	return lead + ", with " + joinClauses(details) + "."
+}
+
+// link renders text as a markdown link, or as plain text when the forge
+// returned no URL.
+func link(text, href string) string {
+	if href == "" {
+		return text
+	}
+	return fmt.Sprintf("[%s](%s)", text, href)
+}
+
+// openedHereURL, mergedHereURL, and mergedElsewhereURL point at the
+// searches behind the numbers in the author sentence. They are empty
+// without a repository URL, and the sentence then carries the numbers
+// alone.
+func (r Report) openedHereURL() string {
+	if r.RepoURL == "" {
+		return ""
+	}
+	return r.RepoURL + "/pulls?q=" + url.QueryEscape("is:pr author:"+r.Author.Login)
+}
+
+func (r Report) mergedHereURL() string {
+	if r.RepoURL == "" {
+		return ""
+	}
+	return r.RepoURL + "/pulls?q=" + url.QueryEscape("is:pr is:merged author:"+r.Author.Login)
+}
+
+func (r Report) mergedElsewhereURL() string {
+	u, err := url.Parse(r.RepoURL)
+	if r.RepoURL == "" || err != nil {
+		return ""
+	}
+	q := fmt.Sprintf("is:pr is:merged author:%s -repo:%s/%s", r.Author.Login, r.Owner, r.Repo)
+	return u.Scheme + "://" + u.Host + "/search?type=pullrequests&q=" + url.QueryEscape(q)
 }
 
 func (r Report) changeSentence() string {
@@ -207,6 +248,6 @@ func footer(p Policy) string {
 	case p.PolicyPath != "":
 		return fmt.Sprintf("Policy: `%s`, preset `%s`", p.PolicyPath, p.Preset)
 	default:
-		return "Policy: default preset, which asks for nothing before review"
+		return "Policy: default preset"
 	}
 }

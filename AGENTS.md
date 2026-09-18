@@ -1,14 +1,14 @@
 # AGENTS.md
 
-Guidance for AI agents working on the vetkitten codebase. The CLAUDE.md
+Guidance for AI agents working on the deslop-kitten codebase. The CLAUDE.md
 symlink resolves to this file. Read top-to-bottom on first session.
 
 ## Project context
 
-vetkitten is a Go binary that reads one pull request from a code forge,
+deslop-kitten is a Go binary that reads one pull request from a code forge,
 compares it with the repository's written contribution policy, and
 posts one comment: numbered requests to act on before review, then a
-sentence or two about the author and how the change was produced. It
+sentence or two about the author and how the author produced the change. It
 runs as a GitHub container action,
 as a CLI, and as a plain container anywhere Docker runs. See
 [`docs/concepts.md`](docs/concepts.md) for the comment,
@@ -21,8 +21,8 @@ the disclosure judge, a small instruct model behind an OpenAI-compatible
 endpoint that the judge container image bundles and the lean image
 leaves out.
 
-Three rules shape every design decision. vetkitten reads untrusted
-text and treats all of it as data. vetkitten posts one comment per pull
+Three rules shape every design decision. deslop-kitten reads untrusted
+text and treats all of it as data. deslop-kitten posts one comment per pull
 request, edits it in place, and never labels, closes, or blocks a
 merge. Every line it posts is either a fact a reader can verify on the
 pull request page or the author's public profile, or a request that
@@ -50,7 +50,7 @@ just test-cover   # tests with coverage.out (used by CI)
 just lint         # golangci-lint v2
 just links        # offline markdown link check
 just fmt          # go fmt + go mod tidy
-just binary       # build bin/vetkitten
+just binary       # build bin/deslop-kitten
 just image        # build the lean action container image
 just judge-image  # build the image that bundles the llama.cpp server and the judge model
 just score REF    # score one pull request (needs GITHUB_TOKEN)
@@ -65,7 +65,7 @@ against an `httptest.Server` that serves fixtures under `/api/v3/`.
 ## Repository layout
 
 ```
-cmd/vetkitten/            CLI entry point and cobra subcommands
+cmd/deslop-kitten/            CLI entry point and cobra subcommands
 internal/
   forge/                  Forge interface, GitHub client, FakeForge, ref and trailer parsing
   rules/                  Policy file loading, embedded presets, pattern compilation
@@ -112,8 +112,21 @@ honored.
   clause tacked on after a semicolon makes it worse. Put environment
   variables, flags, and their defaults in a table with a column for
   the name, the default, and the meaning.
+- **Say what you mean.** Mannered prose substitutes metaphor and
+  flourish for direct statement. Instead of "a parameter worth
+  varying," the mannered writer produces "a dial worth turning."
+  Instead of "this point still matters," they write "this point earns
+  its keep." The phrases exist to display the writer, and readers can
+  tell. Mannered prose makes the reader work harder so the writer can
+  perform, and it is imprecise, because a metaphor drags in
+  connotations the writer did not choose and cannot control. When a
+  literal phrase is available, use it.
+- **Active voice.** Name the actor and let it act. "The action reads
+  the policy from the base branch" is right. "The policy is read from
+  the base branch" hides who reads it. Use the passive only when the
+  actor is unknown or when naming it would mislead.
 - **No ASCII diagrams.** Describe relationships in prose. ASCII boxes
-  and arrows are hard to maintain and rarely earn their space.
+  and arrows are hard to maintain and add little.
 - **No emoji** unless the user explicitly asks for them.
 - **Don't define a thing by what it is not.** "X, not Y" and its
   variants, "X rather than Y", "X and never Y", tell the reader what
@@ -133,13 +146,12 @@ honored.
 
 - Write short, direct sentences. If a sentence has more than one
   comma, consider whether it should be two sentences.
-- Lead with the noun, not the qualifier. "The signal reads the branch
-  name" beats "When a pull request arrives, the signal reads the
-  branch name."
+- Lead with the noun. "The signal reads the branch name" is better
+  than "When a pull request arrives, the signal reads the branch
+  name."
 - Define jargon on first use, even if you think the reader knows it.
-- Do not write in fragments or in a punchy, aphoristic style. Short
-  clipped clauses strung together read like a parable, not like
-  documentation. "No key, no cost, runs on a laptop" is wrong.
+- Do not write in fragments or in an aphoristic style. Short clipped
+  clauses strung together read like a slogan. "No key, no cost, runs on a laptop" is wrong.
   "Ollama runs models locally, so it needs no API key and costs
   nothing to call" is right.
 - Don't write multi-paragraph code docstrings. One short paragraph
@@ -247,9 +259,9 @@ it.
 - **Do not over-chunk.** A heading breaks the reader's flow. Add one
   only where a genuinely new section begins. Merge two short sections
   that are really one idea and let a sentence carry the transition.
-- **Cut filler.** Remove words that earn nothing. If "static" already
-  carries the meaning, do not also write "fixed". Do not lean on one
-  adjective across a passage.
+- **Cut filler.** Remove words that add no meaning. If "static"
+  already carries the meaning, do not also write "fixed". Do not
+  repeat one adjective across a passage.
 
 ## Writing tests
 
@@ -657,7 +669,7 @@ Already-imported deps to use rather than re-implementing:
 
 ### Risk and reversibility
 
-Carefully consider the blast radius of every action. Local, reversible
+Consider the consequences of every action. Local, reversible
 actions (edit a file, run a test) need no preamble. Hard-to-reverse
 actions (force-push, drop database, delete a branch, modify a shared
 configuration) need explicit user confirmation each time.
@@ -668,8 +680,8 @@ push.
 
 ### Confirmation patterns
 
-- Lay out a plan before doing destructive multi-step work. Get a
-  green light, then execute.
+- Lay out a plan before doing destructive multi-step work. Get
+  approval, then execute.
 - After every destructive step, summarize the state. The user often
   wants to verify before authorizing the next step.
 - When you spot a side-effect the user didn't ask for (cleanup,
@@ -679,8 +691,8 @@ push.
 ### Communication style
 
 - Default to terse. The user reads diffs and can see what changed.
-- Lead with the result, then the details if asked. Don't bury the
-  headline under a recap of the process.
+- Lead with the result, then the details if asked. Do not open with
+  a recap of the process.
 - One-sentence end-of-turn summary: what shipped and what is next.
   Never longer than two sentences.
 - Don't restate the user's request back to them. Don't say "Great
@@ -711,7 +723,7 @@ is the one signal that calls out, and it does so only through the
 
 A finding is a request or a fact. A request appears as a numbered item
 at the top of the comment. A fact appears as a clause in the sentence
-about how the change was produced.
+about how the author produced the change.
 
 - **Silent when nothing applies.** Return `nil, nil` when the policy
   disables the check or the pull request carries nothing to report.
@@ -727,29 +739,33 @@ about how the change was produced.
   clause names a number, a date, or a string in a code span that a
   reader can verify on the pull request page or the author's public
   profile. A fact never characterizes the author.
-- **Tables are out.** A reader scans a table to reconstruct the
-  sentence a reviewer would have said. Say the sentence.
-- **No at-signs.** Logins go in code spans. An at-sign would notify the
-  person and turn a fact into a summons.
+- **No tables in the comment.** A reader scans a table to reconstruct
+  the sentence a reviewer would have said. Say the sentence.
+- **Links, never at-signs.** The login links to the profile page, the
+  head branch to its tree, and each pull request count to the search
+  that produced it, so a reader verifies a fact in one click. Every
+  link target is a URL the forge returned or a search URL built from
+  the login and the repository name. An at-sign would notify the
+  person, and a fact should notify nobody.
 - **Severity orders requests** within their group, policy before change.
   A signal never reads another signal's output.
-- **Policy knobs live in the policy.** A threshold a maintainer might
-  want to change belongs in `rules.Policy` with a preset default. A
-  constant only a developer would change stays in the signal file.
+- **Thresholds go in the policy.** A threshold a maintainer might want
+  to change belongs in `rules.Policy` with a preset default. A constant
+  only a developer would change stays in the signal file.
 
 ### Adding a signal
 
 1. Add the type to `policy.go` for a request that cites a policy field,
    `change.go` for a request about the change itself, or `facts.go` for
-   a clause about how the change was produced.
+   a clause about how the author produced the change.
 2. Add it to `Defaults` in `signal.go`, requests before facts.
-3. If it needs a knob, add the field to `rules.File` and `rules.Policy`,
+3. If it needs a threshold, add the field to `rules.File` and `rules.Policy`,
    thread it through `overlay`, validate it, and set a value in
    `presets/default.yaml`.
 4. Extend `humanPR` and `agentPR` in `signals_test.go` so one of them
    fires the signal and the other stays silent, and update the expected
    list in the agent test.
-5. Add a row to the table in `docs/signals.md` and, for a new knob, a
+5. Add a row to the table in `docs/signals.md` and, for a new field, a
    row to the policy table in `docs/action.md`.
 
 ### Adding a preset
@@ -769,7 +785,7 @@ says whether the description discloses model assistance and quotes the
 sentence that does. The disclosure signal in `internal/signals/policy.go`
 is the only caller.
 
-Decisions that hold:
+Decisions:
 
 - **The judge decides one question.** Does the description state that
   a model helped produce the change. Reputation, size, and policy fields
@@ -780,7 +796,7 @@ Decisions that hold:
   without a quote never reaches a finding.
 - **Pluggable at the command line.** `--judge-url` takes any
   OpenAI-compatible base URL and `--judge-model` names the model. An
-  empty URL disables the judge and the disclosure signal is skipped.
+  empty URL disables the judge, and the run skips the disclosure signal.
 - **Permissive license only.** The bundled default is Qwen3.5-0.8B
   under Apache 2.0. `MODEL_URL` on `Dockerfile.judge` swaps it for any
   GGUF the llama.cpp server loads.
@@ -789,13 +805,13 @@ Decisions that hold:
 - **Thinking off, answer capped.** The request passes
   `chat_template_kwargs.enable_thinking = false` and a 300 token cap. A
   thinking model left on reasons until the context fills and never
-  answers, which cost ten minutes per pull request before this was
-  found. An answer that hits the cap is `ErrTruncatedAnswer`, and the
+  answers, which cost ten minutes per pull request before we found the
+  cause. An answer that hits the cap is `ErrTruncatedAnswer`, and the
   signal reports it instead of guessing.
 - **Untrusted input.** The overview is outside text. An author can only
   make the judge say yes by writing a sentence that is a disclosure, so
-  the injection surface is the request the author already wants
-  granted.
+  an injection can only produce the disclosure the author already wants
+  credited.
 
 ## Adding a feature
 
@@ -804,7 +820,7 @@ A rough order:
 1. **Types first.** Extend `forge.PullRequest` if the feature needs data
    the forge does not return yet, and extend `FakeForge` and the GitHub
    fixture server together.
-2. **Policy next** if the feature needs a knob. `rules.File`,
+2. **Policy next** if the feature needs a threshold. `rules.File`,
    `rules.Policy`, `overlay`, validation, preset default.
 3. **Signal** with a firing test and a silent test.
 4. **Report** if the feature changes what the maintainer sees.
@@ -814,5 +830,5 @@ A rough order:
 ## When in doubt
 
 Re-read this document, then the most recent code changes that touched
-the same area. The patterns are intentionally consistent across the
-codebase. Match them rather than introducing a new variation.
+the same area. The patterns are consistent across the codebase on
+purpose. Match them.

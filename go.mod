@@ -1,4 +1,4 @@
-module github.com/dorcha-inc/vetkitten
+module github.com/dorcha-inc/deslop-kitten
 
 go 1.26.1
 

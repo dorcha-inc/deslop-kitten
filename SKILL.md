@@ -1,20 +1,20 @@
-# vetkitten
+# deslop-kitten
 
-Add vetkitten to a GitHub repository. vetkitten is a GitHub Action that
+Add deslop-kitten to a GitHub repository. deslop-kitten is a GitHub Action that
 checks each incoming pull request against the repository's written
 contribution policy and leaves one comment: numbered requests to act on
-before review, then a sentence about the author and how the change was
-produced. It runs a small open model inside the Actions job, needs no
+before review, then a sentence about the author and how they produced
+the change. It runs a small open model inside the Actions job, needs no
 API key, and never labels, closes, or blocks a merge.
 
 Follow these steps in the repository you are working in.
 
 ## 1. Add the workflow
 
-Create `.github/workflows/vetkitten.yml` with exactly this content:
+Create `.github/workflows/deslop-kitten.yml` with exactly this content:
 
 ```yaml
-name: vetkitten
+name: deslop-kitten
 on:
   pull_request:
     types: [opened, synchronize, reopened]
@@ -26,7 +26,7 @@ jobs:
   check:
     runs-on: ubuntu-latest
     steps:
-      - uses: dorcha-inc/vetkitten@main
+      - uses: dorcha-inc/deslop-kitten@main
 ```
 
 `pull-requests: write` lets the action post and edit its comment. Do
@@ -47,7 +47,7 @@ Then decide:
   about the change itself, and asks for nothing the repository did not
   write down.
 
-For a preset, create `.github/vetkitten.yaml`:
+For a preset, create `.github/deslop-kitten.yaml`:
 
 ```yaml
 preset: kubernetes
@@ -74,7 +74,7 @@ judge image, which bundles the model and runs on the Actions runner:
 
 ```yaml
     steps:
-      - uses: docker://ghcr.io/dorcha-inc/vetkitten:judge
+      - uses: docker://ghcr.io/dorcha-inc/deslop-kitten:judge
         with:
           args: score --comment --summary
         env:
@@ -86,10 +86,10 @@ Otherwise keep the default step.
 
 ## 4. Open a pull request
 
-Commit the new files on a branch named `vetkitten-setup` and open a
-pull request titled `ci: add vetkitten`. In the description, say which
+Commit the new files on a branch named `deslop-kitten-setup` and open a
+pull request titled `ci: add deslop-kitten`. In the description, say which
 preset you chose and why in one sentence, and state that an AI agent
-prepared the change. That last sentence is the disclosure vetkitten
+prepared the change. That last sentence is the disclosure deslop-kitten
 itself will look for.
 
 Do not enable branch protection, do not create labels, and do not
@@ -97,5 +97,5 @@ change any existing workflow.
 
 ## Reference
 
-- Every policy field and its default: https://github.com/dorcha-inc/vetkitten/blob/main/docs/action.md
-- Every signal and when it fires: https://github.com/dorcha-inc/vetkitten/blob/main/docs/signals.md
+- Every policy field and its default: https://github.com/dorcha-inc/deslop-kitten/blob/main/docs/action.md
+- Every signal and when it fires: https://github.com/dorcha-inc/deslop-kitten/blob/main/docs/signals.md

@@ -126,8 +126,11 @@ func TestGitHub_PullRequestAssemblesAllParts(t *testing.T) {
 	require.NoError(t, err)
 
 	assert.Equal(t, "alice/fix", pr.HeadBranch)
+	assert.Equal(t, "https://example.com/o/r", pr.RepoURL)
+	assert.Equal(t, "https://example.com/alice/r/tree/alice/fix", pr.HeadURL)
 	assert.Equal(t, Account{
 		Login:                      "alice",
+		URL:                        "https://example.com/alice",
 		CreatedAt:                  time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC),
 		PublicRepos:                12,
 		Followers:                  80,
@@ -179,7 +182,7 @@ func TestGitHub_PolicyFileDecodesContentAndReportsAbsence(t *testing.T) {
 	g, err := NewGitHubEnterprise(nil, "", srv.URL)
 	require.NoError(t, err)
 
-	data, ok, err := g.PolicyFile(context.Background(), "o", "r", "main", ".github/vetkitten.yaml")
+	data, ok, err := g.PolicyFile(context.Background(), "o", "r", "main", ".github/deslop-kitten.yaml")
 	require.NoError(t, err)
 	assert.True(t, ok)
 	assert.Equal(t, "preset: kubernetes\n", string(data))
@@ -224,8 +227,9 @@ func fakeGitHubServer(t *testing.T) *httptest.Server {
 	mux.HandleFunc("GET /api/v3/repos/o/r/pulls/7", func(w http.ResponseWriter, _ *http.Request) {
 		write(w, map[string]any{
 			"number": 7, "title": "fix: tighten parser", "body": "Fixes #12",
-			"user": map[string]any{"login": "alice", "type": "User"},
-			"head": map[string]any{"ref": "alice/fix", "sha": "abc"},
+			"user": map[string]any{"login": "alice", "type": "User", "html_url": "https://example.com/alice"},
+			"head": map[string]any{"ref": "alice/fix", "sha": "abc", "repo": map[string]any{"html_url": "https://example.com/alice/r"}},
+			"base": map[string]any{"ref": "main", "repo": map[string]any{"html_url": "https://example.com/o/r"}},
 		})
 	})
 	mux.HandleFunc("GET /api/v3/repos/o/r/pulls/8", func(w http.ResponseWriter, _ *http.Request) {
@@ -284,7 +288,7 @@ func fakeGitHubServer(t *testing.T) *httptest.Server {
 	mux.HandleFunc("GET /api/v3/repos/o/r/issues/12", func(w http.ResponseWriter, _ *http.Request) {
 		write(w, map[string]any{"number": 12, "state": "open", "labels": []map[string]any{{"name": "accepted"}}})
 	})
-	mux.HandleFunc("GET /api/v3/repos/o/r/contents/.github/vetkitten.yaml", func(w http.ResponseWriter, _ *http.Request) {
+	mux.HandleFunc("GET /api/v3/repos/o/r/contents/.github/deslop-kitten.yaml", func(w http.ResponseWriter, _ *http.Request) {
 		write(w, map[string]any{"type": "file", "encoding": "base64", "content": base64.StdEncoding.EncodeToString([]byte("preset: kubernetes\n"))})
 	})
 	mux.HandleFunc("GET /api/v3/repos/o/r/issues/7/comments", func(w http.ResponseWriter, _ *http.Request) {

@@ -4,7 +4,7 @@ WORKDIR /src
 COPY go.mod go.sum ./
 RUN go mod download
 COPY . .
-RUN CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o /out/vetkitten ./cmd/vetkitten
+RUN CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o /out/deslop-kitten ./cmd/deslop-kitten
 
 # Fetch the judge model. MODEL_URL is any GGUF the llama.cpp server can
 # load. The default is a 0.8B instruct model under Apache 2.0 that
@@ -17,7 +17,7 @@ RUN curl -fsSL -o /model.gguf "$MODEL_URL"
 # Run the llama.cpp server and the scorer in one container. The server
 # image carries a shell, which the entrypoint needs to start both.
 FROM ghcr.io/ggml-org/llama.cpp:server
-COPY --from=build /out/vetkitten /vetkitten
+COPY --from=build /out/deslop-kitten /deslop-kitten
 COPY --from=model /model.gguf /model.gguf
 COPY entrypoint-judge.sh /entrypoint-judge.sh
 ENTRYPOINT ["/entrypoint-judge.sh"]
