@@ -1,5 +1,5 @@
 name: deslop-kitten
-description: Checks each pull request against your contribution policy and posts one comment with what to fix and who sent it.
+description: A free GitHub Action that flags AI slop pull requests before you review them.
 author: jadidbourbaki
 branding:
   icon: shield
