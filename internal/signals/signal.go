@@ -108,6 +108,7 @@ func Defaults(judge disclosure.Judge) []Signal {
 		linkedIssueRequired{},
 		linkedIssueNotAccepted{},
 		filesWithoutIssue{},
+		aiTrailersForbidden{},
 		largeChange{},
 		ciFailing{},
 		thinDescription{},

@@ -69,31 +69,41 @@ func (s aiDisclosureRequired) Evaluate(ctx context.Context, in Input) ([]Finding
 	if err != nil {
 		return nil, fmt.Errorf("judge: %w", err)
 	}
-	var findings []Finding
+	if v.Disclosed {
+		return nil, nil
+	}
+	evidence := "The branch or commits show AI involvement"
+	if trailers := aiTrailers(in.PR, in.Policy); len(trailers) > 0 {
+		evidence = "Commits carry `" + strings.Join(trailers, "`, `") + "`"
+	}
+	return []Finding{{
+		Signal:   "ai_disclosure_required",
+		Category: CategoryPolicy,
+		Severity: SeverityMedium,
+		Title:    "Disclose AI assistance.",
+		Body:     evidence + " and the description does not say how AI assisted the change. This repository asks for a sentence in the description naming the tool and what it did.",
+	}}, nil
+}
+
+type aiTrailersForbidden struct{}
+
+func (aiTrailersForbidden) ID() string { return "ai_trailers_forbidden" }
+
+func (aiTrailersForbidden) Evaluate(_ context.Context, in Input) ([]Finding, error) {
+	if !in.Policy.ForbidAITrailers {
+		return nil, nil
+	}
 	trailers := aiTrailers(in.PR, in.Policy)
-	if !v.Disclosed {
-		evidence := "The branch or commits show AI involvement"
-		if len(trailers) > 0 {
-			evidence = "Commits carry `" + strings.Join(trailers, "`, `") + "`"
-		}
-		findings = append(findings, Finding{
-			Signal:   "ai_disclosure_required",
-			Category: CategoryPolicy,
-			Severity: SeverityMedium,
-			Title:    "Disclose AI assistance.",
-			Body:     evidence + " and the description does not say how AI assisted the change. This repository asks for a sentence in the description naming the tool and what it did.",
-		})
+	if len(trailers) == 0 {
+		return nil, nil
 	}
-	if in.Policy.ForbidAITrailers && len(trailers) > 0 {
-		findings = append(findings, Finding{
-			Signal:   "ai_disclosure_required",
-			Category: CategoryPolicy,
-			Severity: SeverityMedium,
-			Title:    "Remove AI trailers.",
-			Body:     "This repository does not accept AI co-author or assisted-by trailers on commits. Remove `" + strings.Join(trailers, "`, `") + "`.",
-		})
-	}
-	return findings, nil
+	return []Finding{{
+		Signal:   "ai_trailers_forbidden",
+		Category: CategoryPolicy,
+		Severity: SeverityMedium,
+		Title:    "Remove AI trailers.",
+		Body:     "This repository does not accept AI co-author or assisted-by trailers on commits. Remove `" + strings.Join(trailers, "`, `") + "`.",
+	}}, nil
 }
 
 type filesWithoutIssue struct{}
