@@ -21,7 +21,7 @@ jobs:
   check:
     runs-on: ubuntu-latest
     steps:
-      - uses: dorcha-inc/deslop-kitten@main
+      - uses: dorcha-inc/deslop-kitten@v1
 ```
 
 `pull-requests: write` lets the action post and edit its comment. With
@@ -89,9 +89,11 @@ for the disclosure request to fire.
 
 The default image is 4 MB and skips the disclosure check. The judge
 image adds the llama.cpp server and a 0.8B instruct model, about 820 MB
-in total, and decides disclosure by reading the description. Build it
-with `just judge-image`, publish it to a registry, and reference it by
-digest:
+in total, and decides disclosure by reading the description. Every
+release publishes it to the GitHub Container Registry as
+`ghcr.io/dorcha-inc/deslop-kitten:judge` and `judge-<version>`, and
+`just judge-image` builds it locally. Reference it in the workflow
+step:
 
 ```yaml
     steps:

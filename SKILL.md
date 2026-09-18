@@ -26,7 +26,7 @@ jobs:
   check:
     runs-on: ubuntu-latest
     steps:
-      - uses: dorcha-inc/deslop-kitten@main
+      - uses: dorcha-inc/deslop-kitten@v1
 ```
 
 `pull-requests: write` lets the action post and edit its comment. Do
