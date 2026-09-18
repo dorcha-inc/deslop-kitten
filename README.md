@@ -7,6 +7,9 @@
 <p align="center">
   <a href="https://github.com/dorcha-inc/deslop-kitten/actions/workflows/ci.yml"><img src="https://github.com/dorcha-inc/deslop-kitten/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT"></a>
+  <a href="docs/concepts.md#the-disclosure-judge"><img src="https://img.shields.io/badge/model-runs%20on%20the%20runner-brightgreen.svg" alt="model runs on the runner"></a>
+  <a href="docs/concepts.md#the-disclosure-judge"><img src="https://img.shields.io/badge/API%20key-none-brightgreen.svg" alt="no API key"></a>
+  <a href="https://github.com/sponsors/jadidbourbaki"><img src="https://img.shields.io/badge/sponsor-%E2%9D%A4-ea4aaa.svg?logo=githubsponsors" alt="Sponsor"></a>
 </p>
 
 deslop-kitten reads each incoming pull request, compares it with the
