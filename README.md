@@ -23,22 +23,23 @@ blocks a merge.
 </p>
 
 Are you an open source maintainer tired of AI slop pull requests? Most
-of them ignore the contribution policy you wrote, and you review them
-anyway, as a volunteer.
+of those pull requests ignore the contribution policy you wrote. You
+review those pull requests anyway. You do that work as a volunteer.
 
 The spam has a second cost. Until early 2025 I regularly sent fixes to
-projects I liked and got to know their maintainers. Today agents flood
-every popular repository with questionable changes, so maintainers
-engage with nobody they do not already know, and sending a fix is
-rarely worth the effort. Open source needs a fix for that.
+projects I liked. I got to know their maintainers that way. Today agents
+flood every popular repository with questionable changes. Maintainers
+now engage only with people they already know. Sending a fix is rarely
+worth the effort. Open source needs a way out of this.
 
-deslop-kitten is my attempt. It checks each pull request against the
-policy your project already wrote and posts one comment: what the
-contributor must fix before you review, and who opened the pull
-request, with links. It is free and MIT licensed and runs inside your
-GitHub Actions job. The one question that needs a language model goes
-to a 0.8B open model on the runner, so it calls no hosted LLM, needs no
-API key, and nothing meters it.
+deslop-kitten is my attempt. deslop-kitten checks each pull request
+against the policy your project already wrote and posts one comment.
+The comment says what the contributor must fix before you review. The
+comment also says who opened the pull request, with links to the
+profile and the merged pull requests. deslop-kitten is free and MIT
+licensed. deslop-kitten runs inside your GitHub Actions job. The one
+question that needs a language model goes to a 0.8B open model on the
+runner. deslop-kitten calls no hosted LLM and needs no API key.
 
 ## Install
 
