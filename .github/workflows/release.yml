@@ -1,0 +1,45 @@
+name: Release
+
+on:
+  push:
+    tags: ["v[0-9]+.[0-9]+.[0-9]+"]
+
+permissions:
+  contents: read
+  packages: write
+
+# A version tag publishes both container images to the GitHub Container
+# Registry. The lean image is the action's own image, tagged with the
+# version and latest. The judge image bundles the llama.cpp server and
+# the disclosure model, tagged judge and judge-<version>. The moving
+# major tag, v1, is pushed by hand to the same commit and does not
+# trigger a build.
+
+jobs:
+  images:
+    name: Publish images
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Lean image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository }}:${{ github.ref_name }}
+            ghcr.io/${{ github.repository }}:latest
+      - name: Judge image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: Dockerfile.judge
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository }}:judge
+            ghcr.io/${{ github.repository }}:judge-${{ github.ref_name }}
