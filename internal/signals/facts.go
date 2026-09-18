@@ -8,8 +8,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/dorcha-inc/vetkitten/internal/forge"
-	"github.com/dorcha-inc/vetkitten/internal/rules"
+	"github.com/dorcha-inc/deslop-kitten/internal/forge"
+	"github.com/dorcha-inc/deslop-kitten/internal/rules"
 )
 
 const burstWindow = 3 * time.Hour
@@ -90,7 +90,7 @@ func (modelCommitEmail) Evaluate(_ context.Context, in Input) ([]Finding, error)
 		Signal:   "model_commit_email",
 		Category: CategoryFact,
 		Severity: SeverityHigh,
-		Body:     "the commits are authored from " + noun + " `" + strings.Join(emails, "`, `") + "`",
+		Body:     "the commits come from " + noun + " `" + strings.Join(emails, "`, `") + "`",
 	}}, nil
 }
 

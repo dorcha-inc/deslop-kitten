@@ -14,9 +14,9 @@ This project follows the [Contributor Covenant](CODE_OF_CONDUCT.md).
 2. Clone your fork and add the upstream remote:
 
    ```bash
-   git clone https://github.com/YOUR_USERNAME/vetkitten.git
-   cd vetkitten
-   git remote add upstream https://github.com/dorcha-inc/vetkitten.git
+   git clone https://github.com/YOUR_USERNAME/deslop-kitten.git
+   cd deslop-kitten
+   git remote add upstream https://github.com/dorcha-inc/deslop-kitten.git
    ```
 
 ## Development setup
@@ -70,5 +70,5 @@ source.
 - [ ] Commit messages follow the conventional commit format
 - [ ] The description says whether AI assisted the change
 
-The last item is the same disclosure this tool checks for. vetkitten
-scores its own pull requests.
+The last item is the same disclosure this tool checks for. deslop-kitten
+checks its own pull requests.

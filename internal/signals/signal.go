@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/dorcha-inc/vetkitten/internal/disclosure"
-	"github.com/dorcha-inc/vetkitten/internal/forge"
-	"github.com/dorcha-inc/vetkitten/internal/rules"
+	"github.com/dorcha-inc/deslop-kitten/internal/disclosure"
+	"github.com/dorcha-inc/deslop-kitten/internal/forge"
+	"github.com/dorcha-inc/deslop-kitten/internal/rules"
 )
 
 // Category says where a finding appears in the comment.
@@ -19,7 +19,7 @@ const (
 	CategoryPolicy Category = "policy"
 	// CategoryChange is a request about the size or state of the change.
 	CategoryChange Category = "change"
-	// CategoryFact is a clause about how the change was produced.
+	// CategoryFact is a clause about how the author produced the change.
 	CategoryFact Category = "fact"
 )
 
@@ -50,7 +50,7 @@ func (s Severity) Rank() int {
 // is a short imperative such as "Disclose AI assistance." and Body is
 // one or two sentences giving the fact, the policy, and the action. For
 // a fact, Title is empty and Body is a lowercase clause that the report
-// joins into one sentence about how the change was produced.
+// joins into one sentence about how the author produced the change.
 type Finding struct {
 	Signal   string
 	Category Category

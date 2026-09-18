@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/dorcha-inc/vetkitten/internal/forge"
+	"github.com/dorcha-inc/deslop-kitten/internal/forge"
 )
 
 const thinDescriptionWords = 20
@@ -48,7 +48,7 @@ func (ciFailing) Evaluate(_ context.Context, in Input) ([]Finding, error) {
 		Category: CategoryChange,
 		Severity: SeverityMedium,
 		Title:    "Fix CI.",
-		Body:     "Checks are failing on the head commit.",
+		Body:     "A check run on the head commit failed.",
 	}}, nil
 }
 

@@ -7,17 +7,17 @@ import (
 	"strings"
 	"time"
 
-	"github.com/dorcha-inc/vetkitten/internal/forge"
-	"github.com/dorcha-inc/vetkitten/internal/signals"
+	"github.com/dorcha-inc/deslop-kitten/internal/forge"
+	"github.com/dorcha-inc/deslop-kitten/internal/signals"
 )
 
-// CommentMarker is the hidden HTML comment that identifies vetkitten's
+// CommentMarker is the hidden HTML comment that identifies deslop-kitten's
 // comment on a pull request so reruns update it in place.
-const CommentMarker = "<!-- vetkitten -->"
+const CommentMarker = "<!-- deslop-kitten -->"
 
 // heading names the tool and links its repository, since the comment is
 // posted by the workflow's bot account and would otherwise be anonymous.
-const heading = "### <img src=\"https://raw.githubusercontent.com/dorcha-inc/vetkitten/main/share/cat-icon.gif\" height=\"24\" alt=\"\"> [vetkitten](https://github.com/dorcha-inc/vetkitten)\n\n"
+const heading = "### <img src=\"https://raw.githubusercontent.com/dorcha-inc/deslop-kitten/main/share/cat-icon.gif\" height=\"24\" alt=\"\"> [deslop-kitten](https://github.com/dorcha-inc/deslop-kitten)\n\n"
 
 // Report is the result for one pull request.
 type Report struct {
@@ -52,7 +52,7 @@ func (r Report) Comment(p Policy) string {
 }
 
 // AllClear is the comment body that replaces an earlier comment once
-// its requests have been resolved.
+// the author has resolved its requests.
 func AllClear() string {
 	return CommentMarker + "\n" + heading + "Every check passes on the latest commits.\n"
 }

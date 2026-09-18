@@ -46,6 +46,6 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - name: Build
-        run: docker build -t vetkitten:ci .
+        run: docker build -t deslop-kitten:ci .
       - name: Smoke test
-        run: docker run --rm vetkitten:ci presets
+        run: docker run --rm deslop-kitten:ci presets

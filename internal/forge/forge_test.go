@@ -179,7 +179,7 @@ func TestGitHub_PolicyFileDecodesContentAndReportsAbsence(t *testing.T) {
 	g, err := NewGitHubEnterprise(nil, "", srv.URL)
 	require.NoError(t, err)
 
-	data, ok, err := g.PolicyFile(context.Background(), "o", "r", "main", ".github/vetkitten.yaml")
+	data, ok, err := g.PolicyFile(context.Background(), "o", "r", "main", ".github/deslop-kitten.yaml")
 	require.NoError(t, err)
 	assert.True(t, ok)
 	assert.Equal(t, "preset: kubernetes\n", string(data))
@@ -284,7 +284,7 @@ func fakeGitHubServer(t *testing.T) *httptest.Server {
 	mux.HandleFunc("GET /api/v3/repos/o/r/issues/12", func(w http.ResponseWriter, _ *http.Request) {
 		write(w, map[string]any{"number": 12, "state": "open", "labels": []map[string]any{{"name": "accepted"}}})
 	})
-	mux.HandleFunc("GET /api/v3/repos/o/r/contents/.github/vetkitten.yaml", func(w http.ResponseWriter, _ *http.Request) {
+	mux.HandleFunc("GET /api/v3/repos/o/r/contents/.github/deslop-kitten.yaml", func(w http.ResponseWriter, _ *http.Request) {
 		write(w, map[string]any{"type": "file", "encoding": "base64", "content": base64.StdEncoding.EncodeToString([]byte("preset: kubernetes\n"))})
 	})
 	mux.HandleFunc("GET /api/v3/repos/o/r/issues/7/comments", func(w http.ResponseWriter, _ *http.Request) {

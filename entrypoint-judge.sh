@@ -13,4 +13,4 @@ unset LLAMA_ARG_HOST
   --threads "$(nproc)" \
   --log-disable &
 
-exec /vetkitten "$@" --judge-url http://127.0.0.1:8080/v1 --judge-model local
+exec /deslop-kitten "$@" --judge-url http://127.0.0.1:8080/v1 --judge-model local

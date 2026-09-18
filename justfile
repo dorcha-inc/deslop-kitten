@@ -1,4 +1,4 @@
-# vetkitten local task runner. Install via https://just.systems.
+# deslop-kitten local task runner. Install via https://just.systems.
 # Run `just` for a list of recipes.
 
 # Show available recipes when invoked without arguments.
@@ -41,26 +41,26 @@ fmt:
     go fmt ./...
     go mod tidy
 
-# Build bin/vetkitten.
+# Build bin/deslop-kitten.
 binary:
     @mkdir -p bin
-    go build -o bin/vetkitten ./cmd/vetkitten
+    go build -o bin/deslop-kitten ./cmd/deslop-kitten
 
 # Build the lean container image the GitHub Action runs by default.
 image:
-    docker build -t vetkitten:dev .
+    docker build -t deslop-kitten:dev .
 
 # Build the judge image, which bundles the llama.cpp server and a 0.8B model.
 judge-image:
-    docker build -f Dockerfile.judge -t vetkitten:judge .
+    docker build -f Dockerfile.judge -t deslop-kitten:judge .
 
 # Score one pull request with the default policy. Needs GITHUB_TOKEN.
 score ref:
-    go run ./cmd/vetkitten score {{ref}}
+    go run ./cmd/deslop-kitten score {{ref}}
 
 # Score one pull request inside the judge image. Needs GITHUB_TOKEN.
 score-judged ref:
-    docker run --rm -e GITHUB_TOKEN vetkitten:judge score {{ref}}
+    docker run --rm -e GITHUB_TOKEN deslop-kitten:judge score {{ref}}
 
 # Produce coverage.html for the default browser.
 coverage:

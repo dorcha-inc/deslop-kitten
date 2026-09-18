@@ -1,15 +1,15 @@
 # GitHub Action
 
 The action runs as a container on every pull request event, posts or
-updates vetkitten's comment, and writes the same report to the job
+updates deslop-kitten's comment, and writes the same report to the job
 summary.
 
 ## Install
 
-Add a workflow at `.github/workflows/vetkitten.yml`:
+Add a workflow at `.github/workflows/deslop-kitten.yml`:
 
 ```yaml
-name: vetkitten
+name: deslop-kitten
 on:
   pull_request:
     types: [opened, synchronize, reopened]
@@ -21,7 +21,7 @@ jobs:
   check:
     runs-on: ubuntu-latest
     steps:
-      - uses: dorcha-inc/vetkitten@main
+      - uses: dorcha-inc/deslop-kitten@main
 ```
 
 `pull-requests: write` lets the action post and edit its comment. With
@@ -36,8 +36,8 @@ cannot change the policy that applies to it.
 
 | Input | Default | Meaning |
 |---|---|---|
-| policy | `.github/vetkitten.yaml` | Policy file inside the repository. A missing file at the default path applies the default preset |
-| comment | `true` | Post the report as vetkitten's single comment, edited in place on reruns |
+| policy | `.github/deslop-kitten.yaml` | Policy file inside the repository. A missing file at the default path applies the default preset |
+| comment | `true` | Post the report as deslop-kitten's single comment, edited in place on reruns |
 | judge-url | empty | OpenAI-compatible base URL of a disclosure judge. Empty skips the disclosure check |
 | judge-model | `local` | Model name to request from the judge |
 | github-token | `${{ github.token }}` | Token used to read the pull request and post the comment |
@@ -82,7 +82,7 @@ Inside a flow list they need quotes, as in `["dependabot[bot]"]`.
 | kubernetes | Disclosure required, AI trailers not accepted | [Kubernetes pull request guide, AI Guidance](https://github.com/kubernetes/community/blob/master/contributors/guide/pull-requests.md#ai-guidance) |
 | ghostty | Disclosure required, naming the tool and the extent | [Ghostty AI Usage Policy](https://github.com/ghostty-org/ghostty/blob/main/AI_POLICY.md) |
 
-Run `vetkitten presets` to list them. Both named presets need a judge
+Run `deslop-kitten presets` to list them. Both named presets need a judge
 for the disclosure request to fire.
 
 ## The judge image
@@ -95,7 +95,7 @@ digest:
 
 ```yaml
     steps:
-      - uses: docker://ghcr.io/dorcha-inc/vetkitten:judge
+      - uses: docker://ghcr.io/dorcha-inc/deslop-kitten:judge
         with:
           args: score --comment --summary
         env:
@@ -106,14 +106,14 @@ Without an argument, `score` reads the pull request from
 `GITHUB_REPOSITORY` and `GITHUB_REF`, which every pull_request workflow
 run sets.
 
-The entrypoint starts the server on localhost, and vetkitten waits for
+The entrypoint starts the server on localhost, and deslop-kitten waits for
 the model to load before its first request. Loading the model takes a
 few seconds and the judge answers in about three, so a pull request
 takes around twenty seconds end to end. `MODEL_URL` is a build
 argument, so any GGUF the server can load replaces the default.
 
 A repository that already runs a model can pass `judge-url` to the
-default action instead. vetkitten reads `JUDGE_API_KEY` from the
+default action instead. deslop-kitten reads `JUDGE_API_KEY` from the
 environment when the endpoint needs one.
 
 ## Running outside GitHub
@@ -121,9 +121,10 @@ environment when the endpoint needs one.
 Both images run anywhere Docker runs:
 
 ```bash
-docker run --rm -e GITHUB_TOKEN ghcr.io/dorcha-inc/vetkitten:judge score octo/repo#42 --format json
+docker run --rm -e GITHUB_TOKEN ghcr.io/dorcha-inc/deslop-kitten:judge score octo/repo#42 --format json
 ```
 
-`GITHUB_TOKEN` is read from the environment. Without `--comment` nothing
-is posted and the report is printed. Without a token GitHub allows sixty
-requests an hour and one pull request costs about nine.
+deslop-kitten reads `GITHUB_TOKEN` from the environment. Without
+`--comment` it prints the report and posts nothing. Without a token
+GitHub allows sixty requests an hour, and one pull request costs about
+nine.

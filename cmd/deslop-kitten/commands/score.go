@@ -12,14 +12,14 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/dorcha-inc/vetkitten/internal/disclosure"
-	"github.com/dorcha-inc/vetkitten/internal/forge"
-	"github.com/dorcha-inc/vetkitten/internal/report"
-	"github.com/dorcha-inc/vetkitten/internal/rules"
-	"github.com/dorcha-inc/vetkitten/internal/signals"
+	"github.com/dorcha-inc/deslop-kitten/internal/disclosure"
+	"github.com/dorcha-inc/deslop-kitten/internal/forge"
+	"github.com/dorcha-inc/deslop-kitten/internal/report"
+	"github.com/dorcha-inc/deslop-kitten/internal/rules"
+	"github.com/dorcha-inc/deslop-kitten/internal/signals"
 )
 
-const defaultPolicyPath = ".github/vetkitten.yaml"
+const defaultPolicyPath = ".github/deslop-kitten.yaml"
 
 type scoreOptions struct {
 	policyPath   string
@@ -48,10 +48,10 @@ func newScore() *cobra.Command {
 		Use:   "score [owner/repo#number | pull request URL]",
 		Short: "Check one pull request against the repository's policy and print the report",
 		Long: "Check one pull request against the repository's policy and print the report.\n\n" +
-			"With an argument, the policy is read from the local file named by --policy. Without an argument the pull request " +
-			"comes from GITHUB_REPOSITORY and GITHUB_REF, which a pull_request workflow run provides, and the policy is read " +
-			"from the repository's base branch through the API, so no checkout is needed and a pull request cannot change the " +
-			"policy that applies to it.",
+			"With an argument, deslop-kitten reads the policy from the local file named by --policy. Without an argument it reads " +
+			"the pull request from GITHUB_REPOSITORY and GITHUB_REF, which a pull_request workflow run provides, and the policy " +
+			"from the repository's base branch through the API, so the workflow needs no checkout and a pull request cannot " +
+			"change the policy that applies to it.",
 		Args: cobra.MaximumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if opts.format != "markdown" && opts.format != "json" {
@@ -85,7 +85,7 @@ func newScore() *cobra.Command {
 	cmd.Flags().StringVar(&opts.policyPath, "policy", defaultPolicyPath, "policy file to apply")
 	cmd.Flags().StringVar(&opts.format, "format", "markdown", "output format, markdown or json")
 	cmd.Flags().BoolVar(&opts.summary, "summary", false, "also append the report to the file named by GITHUB_STEP_SUMMARY")
-	cmd.Flags().BoolVar(&opts.comment, "comment", false, "post the report as vetkitten's single comment on the pull request")
+	cmd.Flags().BoolVar(&opts.comment, "comment", false, "post the report as deslop-kitten's single comment on the pull request")
 	cmd.Flags().DurationVar(&opts.timeout, "timeout", 60*time.Second, "overall deadline for forge requests")
 	cmd.Flags().StringVar(&opts.judgeURL, "judge-url", "", "OpenAI-compatible base URL of the disclosure judge, empty skips the disclosure check")
 	cmd.Flags().StringVar(&opts.judgeModel, "judge-model", "local", "model name to request from the disclosure judge")
