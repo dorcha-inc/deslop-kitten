@@ -103,7 +103,7 @@ func (s scorer) run(ctx context.Context, out io.Writer, ref forge.Ref, opts scor
 	if err != nil {
 		slog.Default().Warn("score: some signals failed", "ref", ref.String(), "err", err)
 	}
-	rep := report.Report{Owner: pr.Owner, Repo: pr.Repo, Number: pr.Number, Title: pr.Title, Author: pr.Author, Findings: findings, GeneratedAt: time.Now().UTC()}
+	rep := report.Report{Owner: pr.Owner, Repo: pr.Repo, Number: pr.Number, RepoURL: pr.RepoURL, Title: pr.Title, Author: pr.Author, Findings: findings, GeneratedAt: time.Now().UTC()}
 	policy := report.Policy{Preset: s.policy.Preset, Source: s.policy.Source, PolicyPath: s.policyPath}
 
 	if opts.comment {

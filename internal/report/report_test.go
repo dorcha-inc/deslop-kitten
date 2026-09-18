@@ -16,7 +16,10 @@ var now = time.Date(2026, 9, 17, 12, 0, 0, 0, time.UTC)
 
 func TestReport_CommentOrdersRequestsAndWritesTheAuthorInProse(t *testing.T) {
 	r := Report{
-		Author:      forge.Account{Login: "fresh-bot", CreatedAt: time.Date(2015, 3, 2, 0, 0, 0, 0, time.UTC), PublicRepos: 12, Followers: 80, PullRequestsInRepo: 1, MergedPullRequestsAnywhere: 40},
+		Owner:       "o",
+		Repo:        "r",
+		RepoURL:     "https://github.com/o/r",
+		Author:      forge.Account{Login: "fresh-bot", URL: "https://github.com/fresh-bot", CreatedAt: time.Date(2015, 3, 2, 0, 0, 0, 0, time.UTC), PublicRepos: 12, Followers: 80, PullRequestsInRepo: 1, MergedPullRequestsAnywhere: 40},
 		GeneratedAt: now,
 		Findings: []signals.Finding{
 			{Signal: "thin_description", Category: signals.CategoryChange, Severity: signals.SeverityLow, Title: "Describe the change.", Body: "Thin."},
@@ -30,7 +33,7 @@ func TestReport_CommentOrdersRequestsAndWritesTheAuthorInProse(t *testing.T) {
 
 	assert.True(t, strings.HasPrefix(md, CommentMarker))
 	assert.Contains(t, md, "1. **Disclose AI assistance.** No disclosure.\n2. **Consider splitting.** Big.\n3. **Describe the change.** Thin.\n")
-	assert.Contains(t, md, "First pull request here from `fresh-bot`, with 40 merged elsewhere on GitHub and an account since 2015. The head branch `copilot/x` carries a prefix used by AI coding agents and the commits come from the model service address `a@b`.")
+	assert.Contains(t, md, "First pull request here from [fresh-bot](https://github.com/fresh-bot), with [40 merged elsewhere on GitHub](https://github.com/search?type=pullrequests&q=is%3Apr+is%3Amerged+author%3Afresh-bot+-repo%3Ao%2Fr) and an account since 2015. The head branch `copilot/x` carries a prefix used by AI coding agents and the commits come from the model service address `a@b`.")
 	assert.Contains(t, md, "preset `kubernetes` ([source](https://example.com/policy))")
 	assert.NotContains(t, md, "|")
 	assert.False(t, regexp.MustCompile(`(^|\s)@\w`).MatchString(md), "a mention would notify the author")

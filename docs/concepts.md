@@ -24,6 +24,8 @@ how many merged elsewhere on GitHub, and how old the account is. Public
 repository and follower counts join the sentence only for an account
 with no merged pull request anywhere, where they are the only public
 evidence left. A bot outside the trusted list gets a sentence saying so.
+The login links to the profile page and each count to the search that
+produced it, so a maintainer verifies the sentence in one click.
 
 A second sentence, when there is one, covers how the author produced
 the change: a head branch with an agent prefix, commit trailers that

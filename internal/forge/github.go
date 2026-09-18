@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"net/url"
 	"strings"
 	"time"
 
@@ -59,6 +60,8 @@ func (g *GitHub) PullRequest(ctx context.Context, owner, repo string, number int
 		Title:      pr.GetTitle(),
 		Body:       pr.GetBody(),
 		HeadBranch: pr.GetHead().GetRef(),
+		RepoURL:    pr.GetBase().GetRepo().GetHTMLURL(),
+		HeadURL:    headURL(pr.GetHead()),
 		CreatedAt:  pr.GetCreatedAt().Time,
 	}
 	if out.Author, err = g.account(ctx, owner, repo, pr.GetUser()); err != nil {
@@ -134,9 +137,23 @@ func (g *GitHub) UpsertComment(ctx context.Context, owner, repo string, number i
 // account builds the author from the user record when one exists. The
 // Copilot coding agent and other app actors have no user record and
 // cannot be searched, so a 404 there yields a bot with the login alone.
+// headURL is the head branch's tree on its own repository, empty when
+// the head repository is gone.
+func headURL(head *github.PullRequestBranch) string {
+	repo := head.GetRepo().GetHTMLURL()
+	if repo == "" || head.GetRef() == "" {
+		return ""
+	}
+	segments := strings.Split(head.GetRef(), "/")
+	for i, s := range segments {
+		segments[i] = url.PathEscape(s)
+	}
+	return repo + "/tree/" + strings.Join(segments, "/")
+}
+
 func (g *GitHub) account(ctx context.Context, owner, repo string, u *github.User) (Account, error) {
 	login := u.GetLogin()
-	acct := Account{Login: login, IsBot: u.GetType() == "Bot"}
+	acct := Account{Login: login, URL: u.GetHTMLURL(), IsBot: u.GetType() == "Bot"}
 	full, resp, err := g.client.Users.Get(ctx, login)
 	switch {
 	case err == nil:

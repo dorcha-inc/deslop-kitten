@@ -126,8 +126,11 @@ func TestGitHub_PullRequestAssemblesAllParts(t *testing.T) {
 	require.NoError(t, err)
 
 	assert.Equal(t, "alice/fix", pr.HeadBranch)
+	assert.Equal(t, "https://example.com/o/r", pr.RepoURL)
+	assert.Equal(t, "https://example.com/alice/r/tree/alice/fix", pr.HeadURL)
 	assert.Equal(t, Account{
 		Login:                      "alice",
+		URL:                        "https://example.com/alice",
 		CreatedAt:                  time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC),
 		PublicRepos:                12,
 		Followers:                  80,
@@ -224,8 +227,9 @@ func fakeGitHubServer(t *testing.T) *httptest.Server {
 	mux.HandleFunc("GET /api/v3/repos/o/r/pulls/7", func(w http.ResponseWriter, _ *http.Request) {
 		write(w, map[string]any{
 			"number": 7, "title": "fix: tighten parser", "body": "Fixes #12",
-			"user": map[string]any{"login": "alice", "type": "User"},
-			"head": map[string]any{"ref": "alice/fix", "sha": "abc"},
+			"user": map[string]any{"login": "alice", "type": "User", "html_url": "https://example.com/alice"},
+			"head": map[string]any{"ref": "alice/fix", "sha": "abc", "repo": map[string]any{"html_url": "https://example.com/alice/r"}},
+			"base": map[string]any{"ref": "main", "repo": map[string]any{"html_url": "https://example.com/o/r"}},
 		})
 	})
 	mux.HandleFunc("GET /api/v3/repos/o/r/pulls/8", func(w http.ResponseWriter, _ *http.Request) {

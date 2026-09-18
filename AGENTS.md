@@ -741,7 +741,11 @@ about how the author produced the change.
   profile. A fact never characterizes the author.
 - **No tables in the comment.** A reader scans a table to reconstruct
   the sentence a reviewer would have said. Say the sentence.
-- **No at-signs.** Logins go in code spans. An at-sign would notify the
+- **Links, never at-signs.** The login links to the profile page, the
+  head branch to its tree, and each pull request count to the search
+  that produced it, so a reader verifies a fact in one click. Every
+  link target is a URL the forge returned or a search URL built from
+  the login and the repository name. An at-sign would notify the
   person, and a fact should notify nobody.
 - **Severity orders requests** within their group, policy before change.
   A signal never reads another signal's output.

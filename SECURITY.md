@@ -35,8 +35,10 @@ treats all of it as data.
   merge, and it never mentions anyone with an at-sign.
 - **Comment text comes from templates.** Every sentence in the comment
   is a fixed string with numbers, branch names, trailer values, and
-  email addresses substituted in code spans. deslop-kitten echoes no text
-  from the pull request as prose.
+  email addresses substituted in code spans. Every link target is a URL
+  the API returned or a search URL built from the login and the
+  repository name. deslop-kitten echoes no text from the pull request
+  as prose.
 - **Signals match structured fields.** Requests and facts come from
   regular expressions and counts over fields the forge returns.
   deslop-kitten executes nothing from the pull request.
